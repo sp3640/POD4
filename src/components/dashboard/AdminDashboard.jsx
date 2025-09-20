@@ -5,16 +5,16 @@ import '../../styles/Dashboard.css'
 import AuctionStats from '../auction/AuctionStats'
 
 const AdminDashboard = () => {
-  const { users, getUsers, loading: usersLoading } = useAuth()
+  const { getUsers,allUsers, loading: usersLoading } = useAuth()
   const { auctions, loading: auctionsLoading } = useAuctionContext()
   const [activeTab, setActiveTab] = useState('overview')
 
   useEffect(() => {
-    getUsers()
+   getUsers()
   }, [getUsers])
 
   const recentAuctions = auctions.slice(0, 5)
-  const recentUsers = users.slice(0, 5)
+  const recentUsers = allUsers.slice(0, 5)
 
   if (usersLoading || auctionsLoading) {
     return <div className="loading">Loading dashboard...</div>
@@ -105,9 +105,9 @@ const AdminDashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map(user => (
+                  {allUsers.map(user => (
                     <tr key={user.id}>
-                      <td>{user.firstName} {user.lastName}</td>
+                      <td>{user.firstName}{user.lastName}</td>
                       <td>{user.email}</td>
                       <td>
                         <span className={`role-badge ${user.role.toLowerCase()}`}>

@@ -1,15 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../../hooks/auth/useAuth'
 import '../../styles/Auth.css'
 
-// Mock DB
-const USERS_DB = [
-  { email: 'buyer1@gmail.com', password: 'pass123', role: 'buyer' },
-  { email: 'user1@gmail.com', password: 'pass123', role: 'user' },
-  { email: 'admin1@gmail.com', password: 'pass123', role: 'admin' },
-]
 
 const Login = () => {
+  const {login}=useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -33,25 +29,9 @@ const Login = () => {
     setLoading(true)
 
     try {
-      // Find user by email, password, and role
-      const user = USERS_DB.find(
-        u =>
-          u.email.toLowerCase() === formData.email.toLowerCase() &&
-          u.password === formData.password &&
-          u.role === formData.role
-      )
 
-      if (!user) {
-        throw new Error('Invalid email, password, or role')
-      }
-
-      // Save to localStorage (optional)
-      localStorage.setItem('user', JSON.stringify(user))
-
-      // Redirect based on role
-      
-        navigate('/dashboard')
-      
+      await login(formData.email,formData.password,formData.role);
+      navigate('/dashboard')
     } catch (err) {
       setError(err.message)
     } finally {
@@ -100,9 +80,9 @@ const Login = () => {
               required
             >
               <option value="">-- Select Role --</option>
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
-              <option value="buyer">Buyer</option>
+              <option value="ADMIN">Admin</option>
+              <option value="SELLER">Seller</option>
+              <option value="BUYER">Buyer</option>
             </select>
           </div>
 
