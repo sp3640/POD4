@@ -1,0 +1,224 @@
+.notification-system {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 400px;
+  width: 100%;
+}
+
+.notification {
+  position: relative;
+  background: var(--surface-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 1rem 1.5rem 1rem 1rem;
+  border-left: 4px solid;
+  animation: slideIn 0.3s ease-out;
+  cursor: pointer;
+  transition: var(--transition);
+  overflow: hidden;
+}
+
+.notification:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.notification.info {
+  border-left-color: var(--primary-color);
+  background: linear-gradient(135deg, #eff6ff 0%, white 100%);
+}
+
+.notification.success {
+  border-left-color: var(--success-color);
+  background: linear-gradient(135deg, #ecfdf5 0%, white 100%);
+}
+
+.notification.warning {
+  border-left-color: var(--warning-color);
+  background: linear-gradient(135deg, #fffbeb 0%, white 100%);
+}
+
+.notification.error {
+  border-left-color: var(--error-color);
+  background: linear-gradient(135deg, #fef2f2 0%, white 100%);
+}
+
+.notification-content {
+  position: relative;
+  z-index: 2;
+}
+
+.notification-title {
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.notification-message {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.notification-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: currentColor;
+  opacity: 0.3;
+  animation: progressBar linear forwards;
+}
+
+.notification.info .notification-progress {
+  background: var(--primary-color);
+}
+
+.notification.success .notification-progress {
+  background: var(--success-color);
+}
+
+.notification.warning .notification-progress {
+  background: var(--warning-color);
+}
+
+.notification.error .notification-progress {
+  background: var(--error-color);
+}
+
+/* Icon styles (optional) */
+.notification::before {
+  content: '';
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.notification.info::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%233b82f6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.notification.success::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2310b981'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.notification.warning::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23f59e0b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.notification.error::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ef4444'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.notification.has-icon {
+  padding-left: 3rem;
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes progressBar {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.notification.exiting {
+  animation: slideOut 0.3s ease-in forwards;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .notification-system {
+    left: 1rem;
+    right: 1rem;
+    top: 1rem;
+    max-width: none;
+  }
+  
+  .notification {
+    padding: 1rem;
+  }
+  
+  .notification.has-icon {
+    padding-left: 2.5rem;
+  }
+  
+  .notification::before {
+    left: 0.75rem;
+    top: 0.75rem;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .notification-system {
+    left: 0.5rem;
+    right: 0.5rem;
+  }
+  
+  .notification-title {
+    font-size: 0.9rem;
+  }
+  
+  .notification-message {
+    font-size: 0.8rem;
+  }
+}
+
+/* Accessibility */
+.notification:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Reduced motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .notification {
+    animation: none;
+  }
+  
+  .notification-progress {
+    animation: none;
+    display: none;
+  }
+  
+  .notification.exiting {
+    animation: none;
+  }
+}

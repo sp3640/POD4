@@ -1,0 +1,62 @@
+.countdown-timer {
+  text-align: center;
+}
+
+.countdown-timer h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  color: white;
+  opacity: 0.9;
+}
+
+.timer-display {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.time-segment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 50px;
+}
+
+.time-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.5rem;
+  border-radius: var(--radius);
+  min-width: 2.5rem;
+}
+
+.time-label {
+  font-size: 0.75rem;
+  color: white;
+  opacity: 0.8;
+  margin-top: 0.25rem;
+  text-transform: uppercase;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .timer-display {
+    gap: 0.25rem;
+  }
+  
+  .time-segment {
+    min-width: 40px;
+  }
+  
+  .time-number {
+    font-size: 1.25rem;
+    min-width: 2rem;
+    padding: 0.25rem;
+  }
+  
+  .time-label {
+    font-size: 0.7rem;
+  }
+}
