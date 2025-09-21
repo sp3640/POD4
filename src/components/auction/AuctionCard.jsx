@@ -48,7 +48,10 @@ const AuctionCard = ({ auction, onWatchToggle, isWatched = false }) => {
           <Link to={`/auction/${id}`}>{productName}</Link>
         </h3>
         
-        <div className="auction-seller">Seller: {seller.username}</div>
+        <div className="auction-seller">
+  Seller: {seller?.username || 'Unknown'}
+</div>
+
         
         <div className="auction-price">
           <div className="current-bid">

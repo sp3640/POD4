@@ -79,13 +79,23 @@ const AuthProvider = ({ children }) => {
       setLoading(false)
     }
   }, [])
-
-  useEffect(() => {
+useEffect(() => {
+  setLoading(true)
+  try {
     const savedUser = localStorage.getItem('user')
     if (savedUser) {
-      setUser(JSON.parse(savedUser))
+      const parsedUser = JSON.parse(savedUser)
+      setUser(parsedUser)
     }
-  }, [])
+    console.log(savedUser,"user")
+  } catch (err) {
+    console.error('Failed to load user from localStorage', err)
+    setUser(null)
+  } finally {
+    setLoading(false)
+  }
+}, [])
+
 
   const value = {
     user,

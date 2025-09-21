@@ -8,7 +8,7 @@ const AuctionCreateForm = ({ onSuccess }) => {
   const { user } = useAuth()
   const { createAuction, loading } = useAuctionContext()
   const [formData, setFormData] = useState({
-    title: '',
+    productName: '',
     description: '',
     startingPrice: '',
     category: '',
@@ -21,7 +21,7 @@ const AuctionCreateForm = ({ onSuccess }) => {
   const validateForm = () => {
     const newErrors = {}
     
-    if (!formData.title.trim()) newErrors.title = 'Title is required'
+    if (!formData.productName.trim()) newErrors.productName = 'Title is required'
     if (!formData.description.trim()) newErrors.description = 'Description is required'
     if (!formData.startingPrice || parseFloat(formData.startingPrice) <= 0) {
       newErrors.startingPrice = 'Valid starting price is required'
@@ -43,7 +43,7 @@ const AuctionCreateForm = ({ onSuccess }) => {
         ...formData,
         startingPrice: parseFloat(formData.startingPrice),
         images,
-        sellerId: user.id
+        sellerId: user.id || 1
       }
 
       await createAuction(auctionData)
@@ -51,7 +51,7 @@ const AuctionCreateForm = ({ onSuccess }) => {
       
       // Reset form
       setFormData({
-        title: '',
+        productName: '',
         description: '',
         startingPrice: '',
         category: '',
@@ -86,17 +86,17 @@ const AuctionCreateForm = ({ onSuccess }) => {
       <form onSubmit={handleSubmit}>
         <div className="form-grid">
           <div className="form-group">
-            <label htmlFor="title">Auction Title *</label>
+            <label htmlFor="productName">Auction Title *</label>
             <input
               type="text"
-              id="title"
-              name="title"
-              value={formData.title}
+              id="productName"
+              name="productName"
+              value={formData.productName}
               onChange={handleInputChange}
-              className={errors.title ? 'error' : ''}
+              className={errors.productName ? 'error' : ''}
               placeholder="Enter product name"
             />
-            {errors.title && <span className="error-text">{errors.title}</span>}
+            {errors.productName && <span className="error-text">{errors.productName}</span>}
           </div>
 
           <div className="form-group">

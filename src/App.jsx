@@ -19,6 +19,8 @@ import Dashboard from './pages/Dashboard'
 import Home from './pages/Home'
 import Profile from './pages/Profile'
 import './styles/App.css'
+import PublicRoute from './components/auth/PublicRoute'
+
 
 // Initialize mock data for development
 initializeMockData()
@@ -52,16 +54,31 @@ function App() {
             <div className="app">
               <Header onMenuToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
               <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
-              
+
               <main className="main-content">
                 <Routes>
                   {/* Public Routes */}
                   <Route path="/" element={<Home />} />
                   <Route path="/auctions" element={<Auctions />} />
                   <Route path="/auction/:id" element={<AuctionDetails />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
-                  
+
+                  <Route
+                    path="/login"
+                    element={
+                      <PublicRoute>
+                        <Login />
+                      </PublicRoute>
+                    }
+                  />
+                  <Route
+                    path="/register"
+                    element={
+                      <PublicRoute>
+                        <Register />
+                      </PublicRoute>
+                    }
+                  />
+
                   {/* Protected Routes */}
                   <Route
                     path="/dashboard"
@@ -79,7 +96,7 @@ function App() {
                       </ProtectedRoute>
                     }
                   />
-                  
+
                   {/* Admin Routes */}
                   <Route
                     path="/admin/*"
@@ -89,14 +106,15 @@ function App() {
                       </ProtectedRoute>
                     }
                   />
-                  
-                  {/* Catch all route - redirect to home */}
+
+                  {/* Catch all route */}
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
+
               </main>
-              
+
               <Footer />
-              
+
               {/* Notification Systems */}
               <NotificationSystem />
               {toast && (
@@ -106,7 +124,7 @@ function App() {
                   onClose={() => setToast(null)}
                 />
               )}
-              
+
               {/* WebSocket Connection Status Indicator (for development) */}
               {import.meta.env.DEV && (
                 <div className={`websocket-status ${isConnected ? 'connected' : 'disconnected'}`}>

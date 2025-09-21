@@ -1,10 +1,7 @@
-import { useCallback, useState } from 'react'
-import { auctionService } from '../../services/auctionService'
+import { useCallback, useState, useEffect } from 'react'
 import { useWebSocket } from '../useWebSocket'
 import { AuctionContext } from './AuctionContext'
-
-
-// const AuctionContext = createContext()
+import { mockAuctions as initialMockAuctions } from '../../data' // only for first-time seed
 
 export const AuctionProvider = ({ children }) => {
   const [auctions, setAuctions] = useState([])
@@ -14,13 +11,36 @@ export const AuctionProvider = ({ children }) => {
 
   const { subscribeToBids, unsubscribeFromBids, sendBid } = useWebSocket()
 
+  // Load auctions from localStorage on mount (seed with mockAuctions if empty)
+  useEffect(() => {
+    const stored = localStorage.getItem('auctions')
+    if (stored) {
+      setAuctions(JSON.parse(stored))
+    } else {
+      localStorage.setItem('auctions', JSON.stringify(initialMockAuctions))
+      setAuctions(initialMockAuctions)
+    }
+  }, [])
+
+  const saveToLocalStorage = (data) => {
+    localStorage.setItem('auctions', JSON.stringify(data))
+    setAuctions(data)
+  }
+
   const loadAuctions = useCallback(async (filters = {}) => {
     try {
       setLoading(true)
       setError(null)
-      const data = await auctionService.getAuctions(filters)
-      setAuctions(data)
-      return data
+
+      const stored = JSON.parse(localStorage.getItem('auctions')) || []
+      let filtered = stored
+
+      if (filters.category) {
+        filtered = filtered.filter(a => a.category === filters.category)
+      }
+
+      setAuctions(filtered)
+      return filtered
     } catch (err) {
       setError(err.message)
       throw err
@@ -32,7 +52,13 @@ export const AuctionProvider = ({ children }) => {
   const getAuctionById = useCallback(async (id) => {
     try {
       setLoading(true)
-      const auction = await auctionService.getAuction(id)
+      setError(null)
+
+      const stored = JSON.parse(localStorage.getItem('auctions')) || []
+      const auction = stored.find(a => a.id === id)
+
+      if (!auction) throw new Error('Auction not found')
+
       return auction
     } catch (err) {
       setError(err.message)
@@ -46,8 +72,35 @@ export const AuctionProvider = ({ children }) => {
     try {
       setLoading(true)
       setError(null)
-      const newAuction = await auctionService.createAuction(auctionData)
-      setAuctions(prev => [newAuction, ...prev])
+
+      const stored = JSON.parse(localStorage.getItem('auctions')) || []
+      const now = new Date()
+      const startTime = auctionData.startTime || now.toISOString()
+      const endTime = auctionData.endTime || new Date(now.getTime() + (auctionData.duration || 24) * 60 * 60 * 1000).toISOString()
+
+      const newAuction = {
+        id: (stored.length + 1).toString(),
+        productName: auctionData.productName,
+        description: auctionData.description,
+        startingPrice: auctionData.startingPrice,
+        currentBid: auctionData.currentBid ?? auctionData.startingPrice,
+        bidsCount: auctionData.bidsCount ?? 0,
+        status: auctionData.status || 'LIVE',
+        category: auctionData.category,
+        condition: auctionData.condition,
+        seller: auctionData.seller,
+        sellerId:auctionData.sellerId,
+        highestBidder: auctionData.highestBidder || null,
+        imageUrl: auctionData.imageUrl || '/images/placeholder-auction.jpg',
+        startTime,
+        endTime,
+        createdAt: auctionData.createdAt || now.toISOString(),
+        bids: auctionData.bids || []
+      }
+
+      const updated = [...stored, newAuction]
+      saveToLocalStorage(updated)
+
       return newAuction
     } catch (err) {
       setError(err.message)
@@ -57,71 +110,62 @@ export const AuctionProvider = ({ children }) => {
     }
   }, [])
 
-  const placeBid = useCallback(async (auctionId, amount) => {
+  const placeBid = useCallback(async (auctionId, amount, bidder) => {
     try {
       setError(null)
-      const updatedAuction = await auctionService.placeBid(auctionId, amount)
-      setAuctions(prev => prev.map(auction => 
-        auction.id === auctionId ? updatedAuction : auction
-      ))
-      return updatedAuction
+      const stored = JSON.parse(localStorage.getItem('auctions')) || []
+
+      const updated = stored.map(a => {
+        if (a.id === auctionId) {
+          return {
+            ...a,
+            currentBid: amount,
+            bidsCount: (a.bidsCount || 0) + 1,
+            highestBidder: bidder,
+            bids: [...(a.bids || []), { id: Date.now().toString(), bidder, amount, time: new Date().toISOString() }]
+          }
+        }
+        return a
+      })
+
+      saveToLocalStorage(updated)
+      return updated.find(a => a.id === auctionId)
     } catch (err) {
       setError(err.message)
       throw err
     }
   }, [])
 
-  const toggleWatchAuction = useCallback(async (auctionId) => {
-    try {
-      const isWatched = watchedAuctions.includes(auctionId)
-      
-      if (isWatched) {
-        await auctionService.unwatchAuction(auctionId)
-        setWatchedAuctions(prev => prev.filter(id => id !== auctionId))
-      } else {
-        await auctionService.watchAuction(auctionId)
-        setWatchedAuctions(prev => [...prev, auctionId])
-      }
-      
-      return !isWatched
-    } catch (err) {
-      setError(err.message)
-      throw err
+  const toggleWatchAuction = useCallback((auctionId) => {
+    const isWatched = watchedAuctions.includes(auctionId)
+    if (isWatched) {
+      setWatchedAuctions(prev => prev.filter(id => id !== auctionId))
+    } else {
+      setWatchedAuctions(prev => [...prev, auctionId])
     }
+    return !isWatched
   }, [watchedAuctions])
 
   const subscribeToAuctionBids = useCallback((auctionId, callback) => {
     subscribeToBids(auctionId, (bidData) => {
-      setAuctions(prev => prev.map(auction => 
-        auction.id === auctionId 
-          ? { 
-              ...auction, 
-              currentBid: bidData.amount,
-              bidsCount: (auction.bidsCount || 0) + 1,
-              highestBidder: bidData.bidder 
-            }
-          : auction
-      ))
+      placeBid(auctionId, bidData.amount, bidData.bidder)
       callback?.(bidData)
     })
-
     return () => unsubscribeFromBids(auctionId)
-  }, [subscribeToBids, unsubscribeFromBids])
+  }, [subscribeToBids, unsubscribeFromBids, placeBid])
 
   const processPayment = useCallback(async (paymentData) => {
     try {
       setLoading(true)
       setError(null)
-      const result = await auctionService.processPayment(paymentData)
-      
-      // Update auction status to sold
-      setAuctions(prev => prev.map(auction => 
-        auction.id === paymentData.auctionId 
-          ? { ...auction, status: 'SOLD' }
-          : auction
-      ))
-      
-      return result
+      const stored = JSON.parse(localStorage.getItem('auctions')) || []
+
+      const updated = stored.map(a =>
+        a.id === paymentData.auctionId ? { ...a, status: 'SOLD' } : a
+      )
+
+      saveToLocalStorage(updated)
+      return { success: true }
     } catch (err) {
       setError(err.message)
       throw err
@@ -134,8 +178,20 @@ export const AuctionProvider = ({ children }) => {
     try {
       setLoading(true)
       setError(null)
-      const result = await auctionService.submitReview(reviewData)
-      return result
+      const stored = JSON.parse(localStorage.getItem('auctions')) || []
+
+      const updated = stored.map(a => {
+        if (a.id === reviewData.auctionId) {
+          return {
+            ...a,
+            reviews: [...(a.reviews || []), reviewData]
+          }
+        }
+        return a
+      })
+
+      saveToLocalStorage(updated)
+      return { success: true }
     } catch (err) {
       setError(err.message)
       throw err
@@ -145,24 +201,19 @@ export const AuctionProvider = ({ children }) => {
   }, [])
 
   const getReviewsByUser = useCallback((userId) => {
-    // This would typically come from the service, but for now filter mock data
-    return auctions.flatMap(auction => 
+    const stored = JSON.parse(localStorage.getItem('auctions')) || []
+    return stored.flatMap(auction =>
       (auction.reviews || []).filter(review => review.revieweeId === userId)
     )
-  }, [auctions])
-
-  const clearError = useCallback(() => {
-    setError(null)
   }, [])
 
+  const clearError = useCallback(() => setError(null), [])
+
   const value = {
-    // State
     auctions,
     watchedAuctions,
     loading,
     error,
-    
-    // Actions
     loadAuctions,
     getAuctionById,
     createAuction,
@@ -173,8 +224,6 @@ export const AuctionProvider = ({ children }) => {
     submitReview,
     getReviewsByUser,
     clearError,
-    
-    // WebSocket
     sendBid
   }
 
