@@ -33,38 +33,83 @@ const AuctionCreateForm = ({ onSuccess }) => {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  // helper to convert a File into base64 string
+const fileToBase64 = (file) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = (error) => reject(error)
+  })
+}
+
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault()
     
-    if (!validateForm()) return
+  //   if (!validateForm()) return
 
-    try {
-      const auctionData = {
-        ...formData,
-        startingPrice: parseFloat(formData.startingPrice),
-        images,
-        sellerId: user.id || 1
-      }
+  //   try {
+  //     const auctionData = {
+  //       ...formData,
+  //       startingPrice: parseFloat(formData.startingPrice),
+  //       images,
+  //       sellerId: user.id || 1
+  //     }
 
-      await createAuction(auctionData)
-      onSuccess?.()
+  //     await createAuction(auctionData)
+  //     onSuccess?.()
       
-      // Reset form
-      setFormData({
-        productName: '',
-        description: '',
-        startingPrice: '',
-        category: '',
-        duration: '24',
-        condition: 'NEW'
-      })
-      setImages([])
-      setErrors({})
+  //     // Reset form
+  //     setFormData({
+  //       productName: '',
+  //       description: '',
+  //       startingPrice: '',
+  //       category: '',
+  //       duration: '24',
+  //       condition: 'NEW'
+  //     })
+  //     setImages([])
+  //     setErrors({})
       
-    } catch (error) {
-      setErrors({ submit: error.message })
+  //   } catch (error) {
+  //     setErrors({ submit: error.message })
+  //   }
+  // }
+  const handleSubmit = async (e) => {
+  e.preventDefault()
+  if (!validateForm()) return
+
+  try {
+    // Convert all selected files to base64
+    const base64Images = await Promise.all(images.map(file => fileToBase64(file)))
+
+    const auctionData = {
+      ...formData,
+      startingPrice: parseFloat(formData.startingPrice),
+      images: base64Images,   // store base64 strings instead of file paths
+      sellerId: user.id || 1
     }
+
+    await createAuction(auctionData)
+    onSuccess?.()
+
+    // Reset form
+    setFormData({
+      productName: '',
+      description: '',
+      startingPrice: '',
+      category: '',
+      duration: '24',
+      condition: 'NEW'
+    })
+    setImages([])
+    setErrors({})
+  } catch (error) {
+    setErrors({ submit: error.message })
   }
+}
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target

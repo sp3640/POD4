@@ -30,7 +30,7 @@ const Home = () => {
           </div>
         </div>
         <div className="hero-image">
-          <img src="/images/hero-auction.jpg" alt="Auction items" />
+          <img src="public\home.png" alt="Auction items" />
         </div>
       </section>
 
@@ -85,19 +85,19 @@ const Home = () => {
           <h2>Popular Categories</h2>
           <div className="category-grid">
             <div className="category-card">
-              <img src="/images/electronics.jpg" alt="Electronics" />
+              <img src="public\home.png" alt="Electronics" />
               <h3>Electronics</h3>
             </div>
             <div className="category-card">
-              <img src="/images/art.jpg" alt="Art & Collectibles" />
+              <img src="public\home.png" alt="Art & Collectibles" />
               <h3>Art & Collectibles</h3>
             </div>
             <div className="category-card">
-              <img src="/images/jewelry.jpg" alt="Jewelry" />
+              <img src="public\home.png" alt="Jewelry" />
               <h3>Jewelry</h3>
             </div>
             <div className="category-card">
-              <img src="/images/vehicles.jpg" alt="Vehicles" />
+              <img src="public\home.png" alt="Vehicles" />
               <h3>Vehicles</h3>
             </div>
           </div>

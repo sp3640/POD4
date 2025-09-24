@@ -91,7 +91,7 @@ export const AuctionProvider = ({ children }) => {
         seller: auctionData.seller,
         sellerId:auctionData.sellerId,
         highestBidder: auctionData.highestBidder || null,
-        imageUrl: auctionData.imageUrl || '/images/placeholder-auction.jpg',
+        imageUrl: auctionData.images || '/images/placeholder-auction.jpg',
         startTime,
         endTime,
         createdAt: auctionData.createdAt || now.toISOString(),
