@@ -44,38 +44,7 @@ const fileToBase64 = (file) => {
 }
 
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault()
-    
-  //   if (!validateForm()) return
-
-  //   try {
-  //     const auctionData = {
-  //       ...formData,
-  //       startingPrice: parseFloat(formData.startingPrice),
-  //       images,
-  //       sellerId: user.id || 1
-  //     }
-
-  //     await createAuction(auctionData)
-  //     onSuccess?.()
-      
-  //     // Reset form
-  //     setFormData({
-  //       productName: '',
-  //       description: '',
-  //       startingPrice: '',
-  //       category: '',
-  //       duration: '24',
-  //       condition: 'NEW'
-  //     })
-  //     setImages([])
-  //     setErrors({})
-      
-  //   } catch (error) {
-  //     setErrors({ submit: error.message })
-  //   }
-  // }
+  
   const handleSubmit = async (e) => {
   e.preventDefault()
   if (!validateForm()) return

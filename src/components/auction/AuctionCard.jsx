@@ -21,8 +21,11 @@ const AuctionCard = ({ auction, onWatchToggle, isWatched = false }) => {
   const isEnded = status === 'ENDED'
   const hasBids = bidsCount > 0
 
+  // ✅ Check if auction has expired by comparing endTime with now
+  const isExpired = endTime ? new Date(endTime) < new Date() : false
+
   return (
-    <div className={`auction-card ${isEnded ? 'ended' : ''}`}>
+    <div className={`auction-card ${isEnded || isExpired ? 'ended' : ''}`}>
       <div className="auction-card-image">
         <img 
           src={imageUrl || '/images/placeholder-auction.jpg'} 
@@ -49,10 +52,9 @@ const AuctionCard = ({ auction, onWatchToggle, isWatched = false }) => {
         </h3>
         
         <div className="auction-seller">
-  Seller: {seller?.username || 'Unknown'}
-</div>
+          Seller: {seller?.username || 'Unknown'}
+        </div>
 
-        
         <div className="auction-price">
           <div className="current-bid">
             {hasBids ? formatCurrency(currentBid) : formatCurrency(startingPrice)}
@@ -73,7 +75,7 @@ const AuctionCard = ({ auction, onWatchToggle, isWatched = false }) => {
 
         <div className="auction-card-actions">
           <Link to={`/auction/${id}`} className="btn btn-primary">
-            {isLive ? 'Place Bid' : 'View Details'}
+            {isLive && !isExpired ? 'Place Bid' : 'View Details'}
           </Link>
         </div>
       </div>

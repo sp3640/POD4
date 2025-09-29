@@ -126,11 +126,11 @@ function App() {
               )}
 
               {/* WebSocket Connection Status Indicator (for development) */}
-              {import.meta.env.DEV && (
+              {/* {import.meta.env.DEV && (
                 <div className={`websocket-status ${isConnected ? 'connected' : 'disconnected'}`}>
                   WebSocket: {isConnected ? 'Connected' : 'Disconnected'}
                 </div>
-              )}
+              )} */}
             </div>
           </NotificationProvider>
         </AuctionProvider>
