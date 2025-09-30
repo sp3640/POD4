@@ -5,7 +5,7 @@ import '../../styles/Dashboard.css'
 import AuctionStats from '../auction/AuctionStats'
 
 const AdminDashboard = () => {
-  const { getUsers,allUsers, loading: usersLoading } = useAuth()
+  const { getUsers,allUsers, loading: usersLoading,deleteUser } = useAuth()
   const { auctions, loading: auctionsLoading } = useAuctionContext()
   const [activeTab, setActiveTab] = useState('overview')
 
@@ -19,7 +19,12 @@ const AdminDashboard = () => {
   if (usersLoading || auctionsLoading) {
     return <div className="loading">Loading dashboard...</div>
   }
-
+const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      deleteUser(id)
+      // getUsers();
+    }
+  }
   return (
     <div className="admin-dashboard">
       <h1>Admin Dashboard</h1>
@@ -116,8 +121,8 @@ const AdminDashboard = () => {
                       </td>
                       <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                       <td>
-                        <button className="btn btn-sm">Edit</button>
-                        <button className="btn btn-sm btn-danger">Delete</button>
+                        {/* <button className="btn btn-sm">Edit</button> */}
+                        <button className="btn btn-sm btn-danger" onClick={() => handleDelete(user.user_id)}>Delete</button>
                       </td>
                     </tr>
                   ))}

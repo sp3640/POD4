@@ -3,9 +3,11 @@ import { useCallback, useEffect, useState } from 'react'
 import { authService } from '../../services/authService'
 import { AuthContext } from './AuthContext'
 const USERS_DB = [
-  {firstName:'buyer',lastName:'buy', email: 'buyer1@gmail.com', password: 'pass123', role: 'BUYER',username:'buyer1' },
-  { firstName:'sell',lastName:'er', email: 'seller1@gmail.com', password: 'pass123', role: 'SELLER' ,username:'seller1'},
-  { firstName:'ad',lastName:'min', email: 'admin1@gmail.com', password: 'pass123', role: 'ADMIN',username:'admin1' },
+  {user_id:1,firstName:'Kushi',lastName:'Singh', email: 'kushi1@gmail.com', password: 'pass123', role: 'BUYER',username:'kushi1',createdAt:'2023-10-01' },
+  {user_id:2,firstName:'Shreya',lastName:'Nigam', email: 'shreya1@gmail.com', password: 'pass123', role: 'BUYER',username:'shreya1',createdAt:'2024-10-01' },
+  {user_id:3,firstName:'divyanshu',lastName:'bansal', email: 'bansal1@gmail.com', password: 'pass123', role: 'SELLER',username:'bansal1',createdAt:'2025-10-01' },
+  {user_id:4, firstName:'Krati',lastName:'Vaishnavi', email: 'krati@gmail.com', password: 'pass123', role: 'SELLER' ,username:'krati1',createdAt:'2024-10-01'},
+  {user_id:5, firstName:'Sidharth',lastName:'Rai', email: 'admin1@gmail.com', password: 'pass123', role: 'ADMIN',username:'admin1',createdAt:'2025-10-01' },
 ]
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
@@ -36,6 +38,31 @@ const AuthProvider = ({ children }) => {
       setLoading(false)
     }
   }, [])
+  const deleteUser = useCallback(async (id) => {
+  try {
+    setLoading(true)
+    setError(null)
+
+    const index = USERS_DB.findIndex(u => u.user_id === id)
+    if (index === -1) throw new Error("User not found")
+
+    USERS_DB.splice(index, 1) // remove from DB
+    setAllUsers([...USERS_DB]) // update state
+
+    // If the logged-in user deletes themselves, logout
+    if (user?.id === id) {
+      setUser(null)
+      // localStorage.removeItem("user")
+    }
+    // localStorage.setItem('user', JSON.stringify([...USERS_DB]))
+  } catch (err) {
+    setError(err.message)
+    throw err
+  } finally {
+    setLoading(false)
+  }
+}, [user])
+
 
   const register = useCallback(async (userData) => {
     try {
@@ -106,6 +133,7 @@ useEffect(() => {
     logout,
     getUsers,
     allUsers,
+    deleteUser,
     isAuthenticated: !!user,
     isAdmin: user?.role === 'ADMIN',
     isSeller: user?.role === 'SELLER',

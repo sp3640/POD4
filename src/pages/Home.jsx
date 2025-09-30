@@ -85,19 +85,19 @@ const Home = () => {
           <h2>Popular Categories</h2>
           <div className="category-grid">
             <div className="category-card">
-              <img src="public\home.png" alt="Electronics" />
+              <img src="src\assets\chip.png" alt="Electronics" />
               <h3>Electronics</h3>
             </div>
             <div className="category-card">
-              <img src="public\home.png" alt="Art & Collectibles" />
+              <img src="src\assets\art.png" alt="Art & Collectibles" />
               <h3>Art & Collectibles</h3>
             </div>
             <div className="category-card">
-              <img src="public\home.png" alt="Jewelry" />
+              <img src="src\assets\jewellery.png" alt="Jewelry" />
               <h3>Jewelry</h3>
             </div>
             <div className="category-card">
-              <img src="public\home.png" alt="Vehicles" />
+              <img src="src\assets\vehicle.png" alt="Vehicles" />
               <h3>Vehicles</h3>
             </div>
           </div>

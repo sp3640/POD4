@@ -15,15 +15,15 @@ export const AuctionProvider = ({ children }) => {
   useEffect(() => {
     const stored = localStorage.getItem('auctions')
     if (stored) {
-      setAuctions(JSON.parse(stored))
+      setAuctions(JSON.parse(stored)) //fetch
     } else {
       localStorage.setItem('auctions', JSON.stringify(initialMockAuctions))
       setAuctions(initialMockAuctions)
     }
   }, [])
-
+// to store into local storage by name "auctions"
   const saveToLocalStorage = (data) => {
-    localStorage.setItem('auctions', JSON.stringify(data))
+    localStorage.setItem('auctions', JSON.stringify(data)) //store
     setAuctions(data)
   }
 
