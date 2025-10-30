@@ -3,7 +3,7 @@
 }
 
 .dropzone {
-  border: 2px dashed #ccc;
+  border: 2px dashed var(--border-color); /* Was #ccc */
   border-radius: 8px;
   padding: 20px;
   text-align: center;
@@ -13,11 +13,11 @@
 
 .dropzone:hover,
 .dropzone.active {
-  border-color: #007bff;
+  border-color: var(--primary-color); /* Was #007bff */
 }
 
 .dropzone.error {
-  border-color: #dc3545;
+  border-color: var(--error-color); /* Was #dc3545 */
 }
 
 .dropzone-content {
@@ -33,11 +33,11 @@
 
 .upload-hint {
   font-size: 0.8rem;
-  color: #6c757d;
+  color: var(--text-secondary); /* Was #6c757d */
 }
 
 .error-text {
-  color: #dc3545;
+  color: var(--error-color); /* Was #dc3545 */
   font-size: 0.875rem;
   margin-top: 5px;
   display: block;
@@ -54,9 +54,9 @@
   position: relative;
   width: 100px;
   height: 100px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 8px;
   overflow: hidden;
+  border: 1px solid var(--border-color); /* Was #ddd */
 }
 
 .image-preview img {
@@ -65,29 +65,20 @@
   object-fit: cover;
 }
 
-.remove-image {
+.remove-button {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 5px;
+  right: 5px;
   background: rgba(0, 0, 0, 0.7);
   color: white;
   border: none;
-  border-radius: 0 0 0 4px;
-  cursor: pointer;
-  width: 24px;
-  height: 24px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-}
-
-.remove-image:hover {
-  background: rgba(0, 0, 0, 0.9);
-}
-
-.upload-stats {
-  margin-top: 10px;
-  font-size: 0.875rem;
-  color: #6c757d;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
 }

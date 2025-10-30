@@ -35,7 +35,7 @@ const AuctionDetails = () => {
     setMessage('')
 
     try {
-      if (isNaN(amount) || amount <= auction.currentBid) {
+      if (isNaN(amount) || amount <= auction.highestBid) {
         setError('Bid must be higher than current bid')
         return
       }
@@ -59,9 +59,9 @@ const AuctionDetails = () => {
   }
 
   const canUserBid = user && 
-                    user.role === 'BUYER' && 
+                    user.role === 'Buyer' && 
                     user.id !== auction.sellerId && 
-                    auction.status === 'LIVE'
+                    auction.status === 'Live'
 
   return (
     <div className="auction-details">
@@ -110,7 +110,7 @@ const AuctionDetails = () => {
           <div className="bid-info">
             <div className="current-bid">
               <span className="label">Current Bid:</span>
-              <span className="amount">${auction.currentBid.toFixed(2)}</span>
+              <span className="amount">${auction.highestBid.toFixed(2)}</span>
             </div>
             <div className="bids-count">
               {auction.bidsCount} bid{auction.bidsCount !== 1 ? 's' : ''}
@@ -127,7 +127,7 @@ const AuctionDetails = () => {
             )}
           </div>
 
-          {auction.status === 'LIVE' && auction.endTime && (
+          {auction.status === 'Live' && auction.endTime && (
             <div className="timer-section">
               <CountdownTimer endTime={auction.endTime} />
             </div>
@@ -136,23 +136,23 @@ const AuctionDetails = () => {
           {canUserBid ? (
             <BidForm
               auction={auction}
-              currentBid={auction.currentBid}
+              currentBid={auction.highestBid}
               onSubmit={handleBid}
               loading={loading}
             />
-          ) : auction.status === 'LIVE' && user && user.id === auction.sellerId ? (
+          ) : auction.status === 'Live' && user && user.id === auction.sellerId ? (
             <div className="seller-notice">
               <p>You cannot bid on your own auction</p>
             </div>
-          ) : auction.status === 'LIVE' && !user ? (
+          ) : auction.status === 'Live' && !user ? (
             <div className="login-prompt">
               <p>Please log in to place a bid</p>
             </div>
-          ) : auction.status !== 'LIVE' ? (
+          ) : auction.status !== 'Live' ? (
             <div className="auction-ended">
               <p>This auction has ended</p>
               {auction.status === 'SOLD' && auction.highestBidder && (
-                <p>Sold to {auction.highestBidder.username} for ${auction.currentBid.toFixed(2)}</p>
+                <p>Sold to {auction.highestBidder.username} for ${auction.highestBid.toFixed(2)}</p>
               )}
             </div>
           ) : null}

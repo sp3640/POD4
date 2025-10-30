@@ -10,7 +10,7 @@ const Register = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    role: 'BUYER'
+    role: 'Buyer'
   })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -98,8 +98,8 @@ const Register = () => {
               value={formData.role}
               onChange={handleChange}
             >
-              <option value="BUYER">Buy items</option>
-              <option value="SELLER">Sell items</option>
+              <option value="Buyer">Buy items</option>
+              <option value="Seller">Sell items</option>
             </select>
           </div>
 

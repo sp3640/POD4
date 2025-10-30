@@ -1,57 +1,69 @@
-import { apiClient } from './api'
+// src/services/authService.js
+import { authApi } from './apiClients';
 
 export const authService = {
-  // Login user
-  async login(email, password) {
-    const response = await apiClient.post('/auth/login', { email, password })
+  async login(email, password, ) {
+    // Your backend 'AccountController' uses "Username" for login.
+    // We will map the 'email' field to 'username' here.
+    const response = await authApi.post('/Account/login', {
+      username: email, // Mapping email to username
+      password,
+       // Role is not used by your login DTO, but we pass it anyway
+    });
     
-    // Store token
+    // Your backend returns: { token, username, email, role }
     if (response.token) {
-      localStorage.setItem('token', response.token)
+      // Create user object for local storage
+      const user = { 
+        username: response.username, 
+        email: response.email, 
+        role: response.role,
+        // Your backend doesn't return ID or name, so we use username
+        id: response.username, 
+        firstName: response.username 
+      };
+      localStorage.setItem('token', response.token);
+      localStorage.setItem('user', JSON.stringify(user));
+      return user;
     }
-    
-    return response.user
+    throw new Error('Login failed');
   },
 
-  // Register new user
   async register(userData) {
-    const response = await apiClient.post('/auth/register', userData)
+    // Your 'Register.jsx' sends { firstName, lastName, email, ... }
+    const registerData = {
+      username: userData.email, // Use email as username
+      email: userData.email,
+      password: userData.password,
+      role: userData.role,
+      fullName: `${userData.firstName} ${userData.lastName}` // Use the new DTO field
+    };
     
-    // Store token
-    if (response.token) {
-      localStorage.setItem('token', response.token)
-    }
+    // This just returns { message: "..." }
+    const response = await authApi.post('/Account/register', registerData);
     
-    return response.user
+    // After registering, we log them in to get a token
+    return this.login(userData.email, userData.password, userData.role);
   },
 
-  // Logout user
   logout() {
-    localStorage.removeItem('token')
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
   },
-
-  // Get current user
-  async getCurrentUser() {
-    return apiClient.get('/auth/me')
-  },
-
-  // Update user profile
-  async updateProfile(updates) {
-    return apiClient.put('/auth/profile', updates)
-  },
-
-  // Get all users (admin only)
+  
+  // For Admin Dashboard
   async getUsers() {
-    return apiClient.get('/auth/users')
+    return authApi.get('/Account/users');
   },
 
-  // Update user (admin only)
-  async updateUser(id, updates) {
-    return apiClient.put(`/auth/users/${id}`, updates)
-  },
-
-  // Delete user (admin only)
+  // For Admin Dashboard
   async deleteUser(id) {
-    return apiClient.delete(`/auth/users/${id}`)
+    return authApi.delete(`/Account/users/${id}`);
+  },
+  
+  async updateProfile(updates) {
+    // Your backend does not have an update profile endpoint.
+    console.warn('updateProfile API endpoint not implemented');
+    return updates; // Placeholder
   }
-}
+};

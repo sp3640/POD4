@@ -1,42 +1,51 @@
 // src/services/auctionService.js
-import { apiClient } from './api'
+import { auctionApi } from './apiClients';
 
 export const auctionService = {
   async getAuctions(filters = {}) {
-    const queryParams = new URLSearchParams()
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
-        queryParams.append(key, value)
-      }
-    })
-    return apiClient.get(`/auctions?${queryParams.toString()}`)
+    // Your backend doesn't support filters, so we ignore them
+    return auctionApi.get('/Auctions');
   },
 
   async getAuction(id) {
-    return apiClient.get(`/auctions/${id}`)
+    return auctionApi.get(`/Auctions/${id}`);
   },
 
   async createAuction(auctionData) {
-    return apiClient.post('/auctions', auctionData)
+    // Convert frontend data to backend DTO
+    const dto = {
+      productName: auctionData.productName,
+      description: auctionData.description,
+      startPrice: parseFloat(auctionData.startingPrice),
+      // Convert hours (from form) to minutes (for backend)
+      durationMinutes: parseInt(auctionData.duration, 10) * 60, 
+      imageUrl: auctionData.imageUrl || null // Send the first image URL
+    };
+    return auctionApi.post('/Auctions', dto);
   },
 
-  async placeBid(auctionId, amount) {
-    return apiClient.post(`/auctions/${auctionId}/bids`, { amount })
+ async uploadImage(file) {
+    const formData = new FormData();
+    formData.append('file', file); 
+    
+    // This tells axios to remove the default 'application/json' 
+    // and let the browser set the correct 'multipart/form-data'
+    // header with the required boundary.
+    return auctionApi.post('/Upload/upload', formData, {
+      headers: {
+        'Content-Type': undefined
+      }
+    });
   },
-
+  
+  // NOTE: Watchlist is not implemented in your backend.
   async watchAuction(auctionId) {
-    return apiClient.post(`/auctions/${auctionId}/watch`)
+    console.warn('watchAuction API endpoint not specified');
+    return { success: true }; // Placeholder
   },
 
   async unwatchAuction(auctionId) {
-    return apiClient.delete(`/auctions/${auctionId}/watch`)
-  },
-
-  async processPayment(paymentData) {
-    return apiClient.post('/payments', paymentData)
-  },
-
-  async submitReview(reviewData) {
-    return apiClient.post('/reviews', reviewData)
+    console.warn('unwatchAuction API endpoint not specified');
+    return { success: true }; // Placeholder
   }
-}
+};

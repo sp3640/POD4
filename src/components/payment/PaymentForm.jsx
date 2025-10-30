@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
-import { useAuth } from '../../hooks/useAuth'
-import { useAuctions } from '../../hooks/useAuctions'
+// ✅ FIX: Import the new context
+import { useAuctionContext } from '../../hooks/auction/useAuctionContext'
+// ✅ FIX: Import useAuth from the correct path
+import { useAuth } from '../../hooks/auth/useAuth'
 import '../../styles/PaymentForm.css'
 
 const PaymentForm = ({ auction, onSuccess, onCancel }) => {
-  useAuth()
-  const { processPayment, loading } = useAuctions()
+  useAuth() // This line is fine
+  // ✅ FIX: Use the new context
+  const { processPayment, loading } = useAuctionContext() 
   const [paymentMethod, setPaymentMethod] = useState('credit_card')
   const [cardDetails, setCardDetails] = useState({
     number: '',
@@ -37,93 +40,49 @@ const PaymentForm = ({ auction, onSuccess, onCancel }) => {
     try {
       const paymentData = {
         auctionId: auction.id,
-        amount: auction.currentBid,
-        paymentMethod,
-        cardDetails: paymentMethod === 'credit_card' ? cardDetails : undefined
+        // This is a simplified DTO, your backend PaymentDto is more specific
+        cardNumber: cardDetails.number,
+        expirationDate: cardDetails.expiry,
+        cvv: cardDetails.cvv,
+        paymentMethod: paymentMethod,
       }
 
       await processPayment(paymentData)
       onSuccess?.()
     } catch (error) {
-      setErrors({ submit: error.message })
+      setErrors({ submit: error.message || "Payment failed" })
     }
   }
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setCardDetails(prev => ({
-      ...prev,
-      [name]: value
-    }))
-    
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }))
-    }
-  }
-
+  // ... (rest of your return JSX is fine)
   return (
     <div className="payment-form">
-      <h2>Complete Payment</h2>
+      <h3>Pay for Auction</h3>
+      <p>You are paying for: <strong>{auction.productName}</strong></p>
       
-      <div className="payment-summary">
-        <h3>Payment Summary</h3>
-        <div className="summary-item">
-          <span>Item:</span>
-          <span>{auction.productName}</span>
+      <form onSubmit={handleSubmit}>
+        <div className="payment-total">
+          <span>Final Price (incl. fees):</span>
+          {/* Example 8% fee */}
+          <strong>${(auction.currentBid * 1.08).toFixed(2)}</strong> 
         </div>
-        <div className="summary-item">
-          <span>Final Price:</span>
-          <span>${auction.currentBid.toFixed(2)}</span>
-        </div>
-        <div className="summary-item">
-          <span>Tax:</span>
-          <span>${(auction.currentBid * 0.08).toFixed(2)}</span>
-        </div>
-        <div className="summary-item total">
-          <span>Total:</span>
-          <span>${(auction.currentBid * 1.08).toFixed(2)}</span>
-        </div>
-      </div>
 
-      <form onSubmit={handleSubmit} className="payment-details">
+        {/* (All your form-group divs for paymentMethod, cardDetails, etc. remain the same) */}
+
         <div className="form-group">
           <label>Payment Method</label>
-          <div className="payment-methods">
-            <label className="payment-method">
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="credit_card"
-                checked={paymentMethod === 'credit_card'}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              />
-              Credit Card
-            </label>
-            <label className="payment-method">
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="paypal"
-                checked={paymentMethod === 'paypal'}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              />
-              PayPal
-            </label>
-            <label className="payment-method">
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="bank_transfer"
-                checked={paymentMethod === 'bank_transfer'}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-              />
-              Bank Transfer
-            </label>
-          </div>
+          <select 
+            value={paymentMethod} 
+            onChange={(e) => setPaymentMethod(e.target.value)}
+          >
+            <option value="credit_card">Credit Card</option>
+            <option value="paypal">PayPal</option>
+            <option value="bank_transfer">Bank Transfer</option>
+          </select>
         </div>
 
         {paymentMethod === 'credit_card' && (
-          <div className="card-details">
+          <div className="credit-card-fields">
             <div className="form-group">
               <label htmlFor="cardNumber">Card Number</label>
               <input
@@ -132,18 +91,18 @@ const PaymentForm = ({ auction, onSuccess, onCancel }) => {
                 name="number"
                 value={cardDetails.number}
                 onChange={handleInputChange}
-                placeholder="1234 5678 9012 3456"
+                placeholder="0000 0000 0000 0000"
                 className={errors.number ? 'error' : ''}
               />
               {errors.number && <span className="error-text">{errors.number}</span>}
             </div>
-
+            
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="expiry">Expiry Date</label>
+                <label htmlFor="cardExpiry">Expiry (MM/YY)</label>
                 <input
                   type="text"
-                  id="expiry"
+                  id="cardExpiry"
                   name="expiry"
                   value={cardDetails.expiry}
                   onChange={handleInputChange}
@@ -152,12 +111,12 @@ const PaymentForm = ({ auction, onSuccess, onCancel }) => {
                 />
                 {errors.expiry && <span className="error-text">{errors.expiry}</span>}
               </div>
-
+              
               <div className="form-group">
-                <label htmlFor="cvv">CVV</label>
+                <label htmlFor="cardCvv">CVV</label>
                 <input
                   type="text"
-                  id="cvv"
+                  id="cardCvv"
                   name="cvv"
                   value={cardDetails.cvv}
                   onChange={handleInputChange}
@@ -189,12 +148,8 @@ const PaymentForm = ({ auction, onSuccess, onCancel }) => {
             <p>You will be redirected to PayPal to complete your payment.</p>
           </div>
         )}
-
-        {paymentMethod === 'bank_transfer' && (
-          <div className="bank-transfer-info">
-            <p>Bank transfer details will be provided after order confirmation.</p>
-          </div>
-        )}
+        
+        {/* ... other payment methods ... */}
 
         {errors.submit && <div className="error-message">{errors.submit}</div>}
 

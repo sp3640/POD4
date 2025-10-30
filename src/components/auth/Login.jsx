@@ -9,7 +9,7 @@ const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    role: ''
+    //role: ''
   })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -30,9 +30,9 @@ const Login = () => {
 
     try {
 
-      await login(formData.email,formData.password,formData.role);
-      navigate('/dashboard')
-    } catch (err) {
+      await login(formData.email, formData.password); 
+    navigate('/dashboard')
+  } catch (err) {
       setError(err.message)
     } finally {
       setLoading(false)
@@ -69,7 +69,7 @@ const Login = () => {
             />
           </div>
 
-          {/* Role Dropdown */}
+          {/* Role Dropdown 
           <div className="form-group">
             <label htmlFor="role">Role</label>
             <select
@@ -84,7 +84,7 @@ const Login = () => {
               <option value="SELLER">Seller</option>
               <option value="BUYER">Buyer</option>
             </select>
-          </div>
+          </div>*/}
 
           {error && <div className="error-message">{error}</div>}
 

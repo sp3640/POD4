@@ -5,7 +5,7 @@
 .countdown-timer h4 {
   margin: 0 0 0.5rem 0;
   font-size: 1rem;
-  color: white;
+  color: var(--text-primary); /* Was white, now using variable */
   opacity: 0.9;
 }
 
@@ -25,8 +25,8 @@
 .time-number {
   font-size: 1.5rem;
   font-weight: 700;
-  color: rgb(15, 13, 13);
-  background: rgba(18, 23, 26, 0.1);
+  color: var(--text-primary); /* Was rgb(15, 13, 13) */
+  background: var(--border-color); /* Was rgba(18, 23, 26, 0.1) */
   padding: 0.5rem;
   border-radius: var(--radius);
   min-width: 2.5rem;
@@ -34,7 +34,7 @@
 
 .time-label {
   font-size: 0.75rem;
-  color: rgb(27, 26, 26);
+  color: var(--text-secondary); /* Was rgb(27, 26, 26) */
   opacity: 0.8;
   margin-top: 0.25rem;
   text-transform: uppercase;
@@ -46,17 +46,13 @@
     gap: 0.25rem;
   }
   
-  .time-segment {
-    min-width: 40px;
-  }
-  
   .time-number {
     font-size: 1.25rem;
-    min-width: 2rem;
     padding: 0.25rem;
+    min-width: 2rem;
   }
   
   .time-label {
-    font-size: 0.7rem;
+    font-size: 0.625rem;
   }
 }

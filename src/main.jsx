@@ -5,9 +5,8 @@ import AuthProvider from './hooks/auth/AuthProvider'
 import './styles/index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+
     <AuthProvider>
     <App />
     </AuthProvider>
-  </React.StrictMode>,
 )

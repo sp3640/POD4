@@ -1,5 +1,5 @@
 .auction-stats {
-  background: #f8f9fa;
+  background: var(--background-color); /* Was #f8f9fa */
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 20px;
@@ -14,7 +14,7 @@
 }
 
 .stat-card {
-  background: white;
+  background: var(--surface-color); /* Was white */
   padding: 15px;
   border-radius: 6px;
   text-align: center;
@@ -24,12 +24,12 @@
 .stat-value {
   font-size: 1.8rem;
   font-weight: bold;
-  color: #007bff;
+  color: var(--primary-color); /* Was #007bff */
   margin-bottom: 5px;
 }
 
 .stat-label {
-  color: #6c757d;
+  color: var(--text-secondary); /* Was #6c757d */
   font-size: 0.9rem;
 }
 
@@ -41,43 +41,14 @@
 }
 
 .chart-card {
-  background: white;
+  background: var(--surface-color); /* Was white */
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.chart-title {
-  margin-bottom: 15px;
-  color: #343a40;
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.loading {
+.chart-card h4 {
+  margin: 0 0 15px 0;
   text-align: center;
-  padding: 40px;
-  color: #6c757d;
-}
-
-.error {
-  text-align: center;
-  padding: 40px;
-  color: #dc3545;
-  background: #f8d7da;
-  border-radius: 6px;
-}
-
-@media (max-width: 768px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .charts-container {
-    grid-template-columns: 1fr;
-  }
-  
-  .auction-stats {
-    padding: 15px;
-  }
+  color: var(--text-primary); /* Was #333 */
 }

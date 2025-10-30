@@ -61,7 +61,7 @@ const AuctionFilters = ({ filters, onFilterChange }) => {
           onChange={(e) => handleChange('status', e.target.value)}
         >
           <option value="">All Status</option>
-          <option value="LIVE">Live</option>
+          <option value="Live">Live</option>
           <option value="UPCOMING">Upcoming</option>
           <option value="ENDED">Ended</option>
           <option value="SOLD">Sold</option>

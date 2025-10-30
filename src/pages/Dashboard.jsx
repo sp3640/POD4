@@ -12,9 +12,9 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-page">
-      {user.role === 'ADMIN' && <AdminDashboard />}
-      {user.role === 'BUYER' && <BuyerDashboard />}
-      {user.role === 'SELLER' && <SellerDashboard />}
+      {user.role === 'Admin' && <AdminDashboard />}
+      {user.role === 'Buyer' && <BuyerDashboard />}
+      {user.role === 'Seller' && <SellerDashboard />}
     </div>
   )
 }

@@ -9,7 +9,7 @@ const AuctionCard = ({ auction, onWatchToggle, isWatched = false }) => {
     id,
     productName,
     imageUrl,
-    currentBid,
+    highestBid,
     startingPrice,
     bidsCount,
     status,
@@ -17,7 +17,7 @@ const AuctionCard = ({ auction, onWatchToggle, isWatched = false }) => {
     seller
   } = auction
 
-  const isLive = status === 'LIVE'
+  const isLive = status === 'Live'
   const isEnded = status === 'ENDED'
   const hasBids = bidsCount > 0
 
@@ -56,11 +56,11 @@ const AuctionCard = ({ auction, onWatchToggle, isWatched = false }) => {
         </div>
 
         <div className="auction-price">
-          <div className="current-bid">
-            {hasBids ? formatCurrency(currentBid) : formatCurrency(startingPrice)}
+          <div className="highestBid">
+            {hasBids ? formatCurrency(highestBid) : formatCurrency(startingPrice)}
           </div>
           <div className="bid-label">
-            {hasBids ? 'Current Bid' : 'Starting Price'}
+            {hasBids ? 'highestBid' : 'Starting Price'}
           </div>
           {hasBids && (
             <div className="bids-count">{bidsCount} bid{bidsCount !== 1 ? 's' : ''}</div>

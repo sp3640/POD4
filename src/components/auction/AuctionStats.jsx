@@ -6,7 +6,7 @@ const AuctionStats = () => {
 
   const stats = {
     total: auctions.length,
-    live: auctions.filter(a => a.status === 'LIVE').length,
+    live: auctions.filter(a => a.status === 'Live').length,
     upcoming: auctions.filter(a => a.status === 'UPCOMING').length,
     ended: auctions.filter(a => a.status === 'ENDED').length,
     sold: auctions.filter(a => a.status === 'SOLD').length,

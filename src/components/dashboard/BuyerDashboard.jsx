@@ -7,14 +7,14 @@ import AuctionCard from '../auction/AuctionCard'
 const BuyerDashboard = () => {
   const { user } = useAuth()
   const { auctions, watchedAuctions, toggleWatchAuction } = useAuctionContext()
-  const [activeTab, setActiveTab] = useState('bidding')
+  // 1. Set default tab to 'won'
+  const [activeTab, setActiveTab] = useState('won')
 
-  const biddingAuctions = auctions.filter(auction =>
-    auction.bids.some(bid => bid.bidderId === user.id)
-  )
+  // 2. REMOVED the 'biddingAuctions' filter that would crash the page
 
+  // 3. FIXED 'wonAuctions' filter to use correct properties
   const wonAuctions = auctions.filter(auction =>
-    auction.status === 'SOLD' && auction.highestBidderId === user.id
+    auction.status === 'Sold' && auction.highestBidderUsername === user.username
   )
 
   const watchedAuctionItems = auctions.filter(auction =>
@@ -23,15 +23,11 @@ const BuyerDashboard = () => {
 
   return (
     <div className="buyer-dashboard">
-      <h1>Welcome back, {user.firstName}!</h1>
+      {/* Changed user.firstName to user.username for consistency */}
+      <h1>Welcome back, {user.username}!</h1>
 
       <div className="dashboard-tabs">
-        <button
-          className={activeTab === 'bidding' ? 'active' : ''}
-          onClick={() => setActiveTab('bidding')}
-        >
-          Active Bids
-        </button>
+        {/* 4. REMOVED the 'Active Bids' button */}
         <button
           className={activeTab === 'won' ? 'active' : ''}
           onClick={() => setActiveTab('won')}
@@ -46,25 +42,7 @@ const BuyerDashboard = () => {
         </button>
       </div>
 
-      {activeTab === 'bidding' && (
-        <div className="tab-content">
-          <h2>Your Active Bids</h2>
-          {biddingAuctions.length === 0 ? (
-            <p>You haven't placed any bids yet.</p>
-          ) : (
-            <div className="auctions-grid">
-              {biddingAuctions.map(auction => (
-                <AuctionCard
-                  key={auction.id}
-                  auction={auction}
-                  onWatchToggle={toggleWatchAuction}
-                  isWatched={watchedAuctions.includes(auction.id)}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+      {/* 5. REMOVED the 'activeTab === 'bidding'' content block */}
 
       {activeTab === 'won' && (
         <div className="tab-content">
