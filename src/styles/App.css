@@ -5,12 +5,13 @@
   --secondary-color: #808080;
   --success-color: #10b981;
   --warning-color: #f59e0b;
-  --error-color: #E50914; /* Using primary red for errors */
-  --background-color: #3b38380a; /* Dark black background */
+  --error-color: #E50914; /* Red for backgrounds/borders */
+  --text-error: #FF6B6B; /* Brighter red for text */
+  --background-color: #141414; /* Dark black background */
   --surface-color: #222222; /* Dull black for UI elements */
-  --text-primary: #e17777; /* White text */
-  --text-secondary: #dbd5d5; /* Light gray secondary text */
-  --border-color: #080000; /* Dark gray borders */
+  --text-primary: #FFFFFF; /* White text */
+  --text-secondary: #AAAAAA; /* Light gray secondary text */
+  --border-color: #555555; /* Brighter dark gray borders */
 
   /* Unchanged variables */
   --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
@@ -89,7 +90,7 @@ body {
 }
 
 .form-error {
-  color: var(--error-color);
+  color: var(--text-error); /* Changed to brighter red */
   font-size: 0.875rem;
   margin-top: 0.25rem;
 }
@@ -124,13 +125,14 @@ body {
 }
 
 .btn-secondary {
-  background-color: var(--surface-color);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
+  background-color: transparent; /* Changed */
+  color: var(--text-secondary); /* Changed */
+  border: 1px solid var(--text-secondary); /* Changed */
 }
 
 .btn-secondary:hover {
-  background-color: var(--border-color);
+  background-color: var(--text-secondary); /* Changed */
+  color: var(--background-color); /* Changed */
 }
 
 .btn-danger {
@@ -213,8 +215,8 @@ body {
   justify-content: center;
   align-items: center;
   padding: 2rem;
-  color: var(--error-color);
+  color: var(--text-error); /* Changed to brighter red */
   background: rgba(229, 9, 20, 0.05);
-  border: 1px solid var(--error-color);
+  border: 1px solid var(--error-color); /* Kept dark red border */
   border-radius: var(--radius);
 }

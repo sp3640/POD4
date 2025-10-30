@@ -145,7 +145,7 @@
 }
 
 .address-info {
-  background: var(--surface-color); /* Was white */
+  background: var(--surface-color);
   padding: 1.5rem;
   border-radius: var(--radius);
   border: 1px solid var(--border-color);
@@ -165,7 +165,7 @@
 .stat {
   text-align: center;
   padding: 1.5rem;
-  background: var(--surface-color); /* Was white */
+  background: var(--surface-color);
   border-radius: var(--radius);
   border: 1px solid var(--border-color);
 }
@@ -173,7 +173,7 @@
 .stat-number {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--text-error); /* Changed from primary-color */
   margin-bottom: 0.5rem;
 }
 
