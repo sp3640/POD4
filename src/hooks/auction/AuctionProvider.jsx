@@ -31,6 +31,19 @@ export const AuctionProvider = ({ children }) => {
       setLoading(false);
     }
   }, []);
+  // ADD THIS NEW useCallback FUNCTION
+  const getTransactionForAuction = useCallback(async (auctionId) => {
+    try {
+      setLoading(true); // Reuse global loading state
+      setError(null);
+      return await paymentService.getTransactionForAuction(auctionId);
+    } catch (err) {
+      setError(err.message);
+      throw err; // Re-throw so the component can catch it
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   const getAuctionById = useCallback(async (id) => {
     try {
@@ -174,6 +187,7 @@ export const AuctionProvider = ({ children }) => {
     processPayment,
     submitReview,
     getReviewsByUser,
+    getTransactionForAuction,
   };
 
   return (

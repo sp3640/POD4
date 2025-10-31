@@ -1,45 +1,50 @@
-import { useState, useEffect } from 'react'; // Import useEffect
+// src/components/dashboard/SellerDashboard.jsx
+import { useState, useEffect } from 'react';
 import { useAuctionContext } from '../../hooks/auction/useAuctionContext';
 import { useAuth } from '../../hooks/auth/useAuth';
 import '../../styles/Dashboard.css';
 import AuctionCard from '../auction/AuctionCard';
 import AuctionCreateForm from '../auction/AuctionCreateForm';
+// 1. IMPORT THE MODAL
+import PaymentReceiptModal from '../payment/PaymentReceiptModal';
+import ReviewList from '../reviews/ReviewList';
 
 const SellerDashboard = () => {
   const { user } = useAuth();
-  // ✅ FIX: Get loadAuctions function
-  const { auctions, loadAuctions } = useAuctionContext(); 
+  const { auctions, loadAuctions } = useAuctionContext();
   const [activeTab, setActiveTab] = useState('my-auctions');
   const [showCreateForm, setShowCreateForm] = useState(false);
 
-  // ✅ FIX: Load auctions specifically for this dashboard if needed
+  // 2. ADD STATE TO MANAGE WHICH RECEIPT TO SHOW
+  const [selectedAuction, setSelectedAuction] = useState(false);
+
   useEffect(() => {
-    // Optionally re-load auctions when the dashboard mounts
-    // or rely on the initial load in AuctionProvider
-     loadAuctions(); 
+    loadAuctions();
   }, [loadAuctions]);
 
-
-  // ✅ FIX: Filter using the correct fields (auction.sellerUsername and user.username)
   const myAuctions = auctions.filter(auction => auction.sellerUsername === user.username);
 
-  // NOTE: Your backend Auction model might not have 'status' yet.
-  // Assuming 'LIVE', 'ENDED', 'SOLD' statuses exist for filtering.
-  // If not, these filters won't work correctly.
-  const activeAuctions = myAuctions.filter(auction => auction.status === 'Live'); // Match backend ('Live')
-  const upcomingAuctions = myAuctions.filter(auction => auction.status === 'Upcoming'); // Or whatever your backend uses
+  // Assuming statuses: 'Live', 'Upcoming', 'Ended', 'Sold'
+  const activeAuctions = myAuctions.filter(auction => auction.status === 'Live');
+  const upcomingAuctions = myAuctions.filter(auction => auction.status === 'Upcoming');
+  const soldAuctions = myAuctions.filter(auction => auction.status === 'Sold'); // Used for the new 'sold' tab
   const endedAuctions = myAuctions.filter(auction =>
-    ['Ended', 'Sold'].includes(auction.status) // Match backend ('Ended', 'Sold')
+    ['Ended'].includes(auction.status) // Ended but not sold
   );
+
+  // Consolidated ended auctions for the 'my-auctions' tab if you prefer one list:
+  // const endedAndSoldAuctions = myAuctions.filter(auction =>
+  //   ['Ended', 'Sold'].includes(auction.status)
+  // );
 
   const handleAuctionCreated = () => {
     setShowCreateForm(false);
-    // ✅ FIX: Refresh auctions list after creating one
-    loadAuctions(); 
+    loadAuctions();
   };
 
-  // --- No changes needed below this line in the return statement ---
-  // The button and modal logic were already correct.
+   const canUserReview = user && 
+                    user.role === 'Buyer' || 
+                    user.role === 'Seller'
 
   return (
     <div className="seller-dashboard">
@@ -53,6 +58,13 @@ const SellerDashboard = () => {
           >
             My Auctions
           </button>
+          {/* Add the 'Sold Items' tab */}
+          <button
+            className={activeTab === 'Sold' ? 'active' : ''}
+            onClick={() => setActiveTab('Sold')}
+          >
+            Sold Items
+          </button>
           <button
             className={activeTab === 'stats' ? 'active' : ''}
             onClick={() => setActiveTab('stats')}
@@ -61,23 +73,20 @@ const SellerDashboard = () => {
           </button>
         </div>
 
-        {/* This button's logic is correct */}
         <button
           className="btn btn-primary"
           onClick={() => setShowCreateForm(true)}
         >
-          Create New Auction 
+          Create New Auction
         </button>
       </div>
 
-      {/* This modal logic is correct */}
       {showCreateForm && (
         <div className="modal-overlay">
           <div className="modal-content">
-             {/* Pass onCancel to allow closing */}
-            <AuctionCreateForm 
-                onSuccess={handleAuctionCreated} 
-                onCancel={() => setShowCreateForm(false)} 
+            <AuctionCreateForm
+              onSuccess={handleAuctionCreated}
+              onCancel={() => setShowCreateForm(false)}
             />
             <button
               className="modal-close"
@@ -98,7 +107,6 @@ const SellerDashboard = () => {
             ) : (
               <div className="auctions-grid">
                 {activeAuctions.map(auction => (
-                  // Assuming AuctionCard handles missing props gracefully
                   <AuctionCard key={auction.id} auction={auction} />
                 ))}
               </div>
@@ -133,6 +141,33 @@ const SellerDashboard = () => {
         </div>
       )}
 
+      {/* The new 'sold' tab content */}
+      {activeTab === 'Sold' && (
+        <div className="tab-content">
+          <h2>Sold Items</h2>
+          {soldAuctions.length === 0 ? (
+            <p>No items sold yet.</p>
+          ) : (
+            <div className="auctions-grid">
+              {/* 3. UPDATE THE LOOP TO ADD THE BUTTON */}
+              {soldAuctions.map(auction => (
+                <div key={auction.id} className="auction-card-wrapper">
+                  <AuctionCard auction={auction} />
+                  {/* ADD THIS BUTTON */}
+                  <button
+                    className="btn btn-secondary"
+                    style={{ width: '100%', marginTop: '0.5rem' }}
+                    onClick={() => setSelectedAuction(auction)}
+                  >
+                    View Receipt
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {activeTab === 'stats' && (
         <div className="tab-content">
           <div className="stats-grid">
@@ -143,7 +178,6 @@ const SellerDashboard = () => {
 
             <div className="stat-card">
               <div className="stat-value">
-                 {/* ✅ FIX: Use highestBid which exists on backend model */}
                 ${myAuctions.reduce((sum, auction) => sum + (auction.highestBid || 0), 0).toLocaleString()}
               </div>
               <div className="stat-label">Total Highest Bids</div>
@@ -157,13 +191,22 @@ const SellerDashboard = () => {
             </div>
 
             <div className="stat-card">
-               {/* Note: bidsCount doesn't exist on backend model */}
               <div className="stat-value">N/A</div>
               <div className="stat-label">Total Bids</div>
             </div>
           </div>
         </div>
       )}
+
+      {/* 4. ADD THE MODAL RENDER LOGIC AT THE END */}
+      {selectedAuction && (
+        <PaymentReceiptModal
+          auction={selectedAuction}
+          onClose={() => setSelectedAuction(null)}
+        />
+      )}
+
+      {canUserReview && <ReviewList username={user.username}/>}
     </div>
   );
 };

@@ -1,33 +1,35 @@
-import { useState } from 'react'
-import { useAuctionContext } from '../../hooks/auction/useAuctionContext'
-import { useAuth } from '../../hooks/auth/useAuth'
-import '../../styles/Dashboard.css'
-import AuctionCard from '../auction/AuctionCard'
+import { useState } from 'react';
+import { useAuctionContext } from '../../hooks/auction/useAuctionContext';
+import { useAuth } from '../../hooks/auth/useAuth';
+import '../../styles/Dashboard.css';
+import AuctionCard from '../auction/AuctionCard';
+import PaymentReceiptModal from '../payment/PaymentReceiptModal'; // 1. IMPORT THE MODAL
+import ReviewList from '../reviews/ReviewList';
 
 const BuyerDashboard = () => {
-  const { user } = useAuth()
-  const { auctions, watchedAuctions, toggleWatchAuction } = useAuctionContext()
-  // 1. Set default tab to 'won'
-  const [activeTab, setActiveTab] = useState('won')
+  const { user } = useAuth();
+  const { auctions, watchedAuctions, toggleWatchAuction } = useAuctionContext();
+  const [activeTab, setActiveTab] = useState('won');
 
-  // 2. REMOVED the 'biddingAuctions' filter that would crash the page
+  // 2. ADD STATE TO MANAGE WHICH RECEIPT TO SHOW
+  const [selectedAuction, setSelectedAuction] = useState(null);
 
-  // 3. FIXED 'wonAuctions' filter to use correct properties
   const wonAuctions = auctions.filter(auction =>
     auction.status === 'Sold' && auction.highestBidderUsername === user.username
-  )
+  );
 
   const watchedAuctionItems = auctions.filter(auction =>
     watchedAuctions.includes(auction.id)
-  )
+  );
+   const canUserReview = user && 
+                    user.role === 'Buyer' || 
+                    user.role === 'Seller'
 
   return (
     <div className="buyer-dashboard">
-      {/* Changed user.firstName to user.username for consistency */}
       <h1>Welcome back, {user.username}!</h1>
 
       <div className="dashboard-tabs">
-        {/* 4. REMOVED the 'Active Bids' button */}
         <button
           className={activeTab === 'won' ? 'active' : ''}
           onClick={() => setActiveTab('won')}
@@ -42,8 +44,6 @@ const BuyerDashboard = () => {
         </button>
       </div>
 
-      {/* 5. REMOVED the 'activeTab === 'bidding'' content block */}
-
       {activeTab === 'won' && (
         <div className="tab-content">
           <h2>Auctions You've Won</h2>
@@ -52,12 +52,21 @@ const BuyerDashboard = () => {
           ) : (
             <div className="auctions-grid">
               {wonAuctions.map(auction => (
-                <AuctionCard
-                  key={auction.id}
-                  auction={auction}
-                  onWatchToggle={toggleWatchAuction}
-                  isWatched={watchedAuctions.includes(auction.id)}
-                />
+                <div key={auction.id} className="auction-card-wrapper">
+                  <AuctionCard
+                    auction={auction}
+                    onWatchToggle={toggleWatchAuction}
+                    isWatched={watchedAuctions.includes(auction.id)}
+                  />
+                  {/* ADD THIS BUTTON */}
+                  <button
+                    className="btn btn-secondary"
+                    style={{ width: '100%', marginTop: '0.5rem' }}
+                    onClick={() => setSelectedAuction(auction)}
+                  >
+                    View Receipt
+                  </button>
+                </div>
               ))}
             </div>
           )}
@@ -83,8 +92,18 @@ const BuyerDashboard = () => {
           )}
         </div>
       )}
-    </div>
-  )
-}
 
-export default BuyerDashboard
+      {/* 4. ADD THE MODAL RENDER LOGIC AT THE END */}
+      {selectedAuction && (
+        <PaymentReceiptModal
+          auction={selectedAuction}
+          onClose={() => setSelectedAuction(null)}
+        />
+      )}
+
+      {canUserReview && <ReviewList username={user.username}/>}
+    </div>
+  );
+};
+
+export default BuyerDashboard;

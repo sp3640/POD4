@@ -146,14 +146,13 @@ const handleDelete = (id) => {
                     <th>Current Bid</th>
                     <th>Status</th>
                     <th>Ends</th>
-                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {auctions.map(auction => (
                     <tr key={auction.id}>
                       <td>{auction.productName}</td>
-                      <td>{auction.seller.username}</td>
+                      <td>{auction.sellerUsername}</td>
                       <td>${auction.currentBid}</td>
                       <td>
                         <span className={`status-badge ${auction.status.toLowerCase()}`}>
@@ -162,10 +161,6 @@ const handleDelete = (id) => {
                       </td>
                       <td>
                         {auction.endTime ? new Date(auction.endTime).toLocaleDateString() : 'N/A'}
-                      </td>
-                      <td>
-                        <button className="btn btn-sm">View</button>
-                        <button className="btn btn-sm btn-warning">Edit</button>
                       </td>
                     </tr>
                   ))}

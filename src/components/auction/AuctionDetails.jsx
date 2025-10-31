@@ -5,6 +5,9 @@ import { useAuth } from '../../hooks/auth/useAuth'
 import '../../styles/AuctionDetails.css'
 import CountdownTimer from '../shared/CountdownTimer'
 import BidForm from './BidForm'
+import PaymentReceiptModal from '../payment/PaymentReceiptModal'
+import ReviewForm from '../reviews/ReviewForm'
+import ReviewList from '../reviews/ReviewList'
 
 const AuctionDetails = () => {
   const { id } = useParams()
@@ -13,6 +16,7 @@ const AuctionDetails = () => {
   const [auction, setAuction] = useState(null)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const [showReceiptModal, setShowReceiptModal] = useState(false)
 
   useEffect(() => {
     const fetchAuction = async () => {
@@ -62,7 +66,10 @@ const AuctionDetails = () => {
                     user.role === 'Buyer' && 
                     user.id !== auction.sellerId && 
                     auction.status === 'Live'
-
+  const canUserReview = user && 
+                    user.role === 'Buyer' || 
+                    user.role === 'Seller'
+                    
   return (
     <div className="auction-details">
       <div className="auction-details-header">
@@ -206,6 +213,23 @@ const AuctionDetails = () => {
           )}
         </div>
       </div>
+            {/* 4. ADD THE MODAL RENDER LOGIC AT THE END */}
+    
+       <div className="payment-button-section">
+        <button className="open-receipt-button" onClick={() => setShowReceiptModal(true)}>
+          View Payment Receipt
+        </button>
+      </div>
+
+      {/* ✅ Modal render logic */}
+      {showReceiptModal && (
+        <PaymentReceiptModal
+          auction={auction}
+          onClose={() => setShowReceiptModal(false)}
+        />
+      )}
+
+      {canUserReview && <ReviewForm auction={auction} />}
     </div>
   )
 }

@@ -1,0 +1,107 @@
+/* src/styles/PaymentReceiptModal.css */
+
+/* Re-use existing modal styles from Dashboard.css */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+}
+
+.modal-content {
+  background: var(--surface-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  padding: 2rem;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  z-index: 1001;
+}
+
+/* Specific styles for the receipt */
+.receipt-modal h2 {
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.receipt-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.receipt-item {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.receipt-item:last-child {
+  border-bottom: none;
+}
+
+.receipt-item strong {
+  color: var(--text-secondary);
+}
+
+.receipt-item span {
+  color: var(--text-primary);
+  font-weight: 500;
+  text-align: right;
+  word-break: break-all; /* For long IDs */
+}
+
+.receipt-item.final-amount {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+  border-bottom: none;
+}
+
+.receipt-item.final-amount strong {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+}
+
+.receipt-item.final-amount span {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+.open-receipt-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.open-receipt-button:hover {
+  background-color: #0056b3;
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 // ✅ FIX: Import the new context
 import { useAuctionContext } from '../../hooks/auction/useAuctionContext'
-import '../../styles/ReviewList.css'
+//import '../../styles/ReviewList.css'
 
 const ReviewList = ({ username }) => {
   // ✅ FIX: Use the new context
