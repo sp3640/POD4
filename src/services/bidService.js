@@ -1,5 +1,6 @@
 // src/services/bidService.js
 import { bidApi } from './apiClients';
+import { auctionService } from './auctionService';
 
 export const bidService = {
   async getBidsForAuction(auctionId) {
@@ -16,7 +17,7 @@ export const bidService = {
       const bid = response.data;
 
       // Call updateHighestBid using the bid info
-      await auctionService.updateHighestBid(bid.auctionId, bid.amount, bid.bidderUsername);
+     // await auctionService.updateHighestBid(auctionId, bid.amount, bid.bidderUsername);
 
       return bid;
     } catch (error) {

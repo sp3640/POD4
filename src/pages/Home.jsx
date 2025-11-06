@@ -52,13 +52,7 @@ const Home = () => {
             </Link>
           </div>
         </div>
-        <div className="hero-image">
-          <img 
-            src="public/home.png" 
-            alt="Auction items" 
-            onError={(e) => e.target.src = 'https://placehold.co/600x400'}
-          />
-        </div>
+        
       </section>
 
       {/* Featured Auctions */}
