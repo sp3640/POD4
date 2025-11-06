@@ -12,14 +12,25 @@ const AuctionCreateForm = ({ onSuccess }) => {
   // ✅ FIX: Use the new context and get the API-driven functions
   const { createAuction, loading } = useAuctionContext()
 
+  // const [formData, setFormData] = useState({
+  //   productName: '',
+  //   description: '',
+  //   startingPrice: '10', // Default value
+  //   category: 'ELECTRONICS', // Default value
+  //   duration: '24', // Default value
+  //   condition: 'NEW' // Default value
+  // })
   const [formData, setFormData] = useState({
-    productName: '',
-    description: '',
-    startingPrice: '10', // Default value
-    category: 'ELECTRONICS', // Default value
-    duration: '24', // Default value
-    condition: 'NEW' // Default value
-  })
+  productName: '',
+  description: '',
+  startingPrice: '10',
+  category: 'ELECTRONICS',
+  duration: '24',
+  condition: 'NEW',
+  startTime: new Date().toISOString(), // default to now
+  endTime: '' // will be calculated
+})
+
   // 'images' state will hold the File objects from ImageUpload
   const [images, setImages] = useState([])
   const [errors, setErrors] = useState({})
@@ -90,7 +101,7 @@ const AuctionCreateForm = ({ onSuccess }) => {
         description: formData.description,
         startingPrice: parseFloat(formData.startingPrice),
         // Your form uses 'duration' in hours, the service converts it
-        duration: parseInt(formData.duration, 10),
+        duration: parseInt(formData.duration) / 60,
         // Pass the URL from step 3
         imageUrl: uploadedImageUrl
       };
@@ -145,19 +156,18 @@ const AuctionCreateForm = ({ onSuccess }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="duration">Duration (Hours) *</label>
-          <select
+          <label htmlFor="duration">Duration (Minutes) *</label>
+          <input
+            type="number"
             id="duration"
             name="duration"
             value={formData.duration}
             onChange={handleInputChange}
-          >
-            <option value="24">24 Hours</option>
-            <option value="48">48 Hours</option>
-            <option value="72">72 Hours (3 Days)</option>
-            I             <option value="168">168 Hours (7 Days)</option>
-          </select>
+            placeholder="Enter duration in minutes"
+            min="1"
+          />
         </div>
+
       </div>
 
       <div className="form-row">

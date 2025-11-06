@@ -9,9 +9,43 @@
   gap: 4rem;
   align-items: center;
   padding: 4rem 2rem;
-  background: var(--surface-color); /* Was linear-gradient(...) */
-  color: var(--text-primary); /* Was white */
+  /* This is now a fallback background */
+  background: var(--surface-color); 
+  color: white; /* --- MODIFIED: Text must be light for the dark overlay */
   min-height: 600px;
+  overflow: hidden; /* --- ADDED: Ensures video doesn't overflow */
+}
+
+/* --- NEW STYLES FOR VIDEO BACKGROUND --- */
+.hero-background-video,
+.hero-overlay {
+  /* This makes them span all grid columns and rows */
+  grid-column: 1 / -1;
+  grid-row: 1 / 2;
+  /* Make them fill the grid cell */
+  width: 100%;
+  height: 100%;
+}
+
+.hero-background-video {
+  object-fit: cover; /* Cover the whole area */
+  z-index: 1;        /* Sit at the back */
+}
+
+.hero-overlay {
+  /* This creates the 50% dark tint. Adjust 0.5 to make it darker/lighter. */
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2; /* Sit on top of the video */
+}
+/* --- END NEW STYLES --- */
+
+
+.hero-content {
+  /* --- ADDED FOR STACKING --- */
+  grid-row: 1 / 2;    /* Must be in the same row as the video */
+  grid-column: 1 / 2; /* Occupy the first column */
+  z-index: 3;         /* Sit on top of the overlay */
+  /* --- END OF ADDITIONS --- */
 }
 
 .hero-content h1 {
@@ -38,6 +72,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  /* --- ADDED FOR STACKING --- */
+  grid-row: 1 / 2;    /* Must be in the same row as the video */
+  grid-column: 2 / 3; /* Occupy the second column */
+  z-index: 3;         /* Sit on top of the overlay */
+  /* --- END OF ADDITIONS --- */
 }
 
 .hero-image img {
@@ -218,6 +257,14 @@
     min-height: auto;
   }
   
+  /* --- ADDED FOR RESPONSIVE STACKING --- */
+  .hero-content,
+  .hero-image {
+    /* On mobile, make content and image span the full width */
+    grid-column: 1 / -1; 
+  }
+  /* --- END OF ADDITION --- */
+
   .hero-content h1 {
     font-size: 2.5rem;
   }

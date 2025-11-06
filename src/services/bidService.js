@@ -8,8 +8,20 @@ export const bidService = {
   },
   
   async placeBid(auctionId, amount) {
-    // Calls POST /api/Bids
-    // DTO is { auctionId, amount }
-    return bidApi.post('/Bids', { auctionId, amount });
+    try {
+      // Place the bid
+      const response = await bidApi.post('/Bids', { auctionId, amount });
+
+      // Extract bid info from response
+      const bid = response.data;
+
+      // Call updateHighestBid using the bid info
+      await auctionService.updateHighestBid(bid.auctionId, bid.amount, bid.bidderUsername);
+
+      return bid;
+    } catch (error) {
+      console.error('Bid placement or highest bid update failed:', error.response?.data || error.message);
+      throw error;
+    }
   }
 };

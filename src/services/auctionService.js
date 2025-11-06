@@ -6,6 +6,20 @@ export const auctionService = {
     // Your backend doesn't support filters, so we ignore them
     return auctionApi.get('/Auctions');
   },
+async updateHighestBid(auctionId, amount, bidderUsername) {
+    try {
+      const response = await auctionApi.put(`/Auctions/highestBid/${auctionId}`, null, {
+        params: {
+          amount,
+          bidderUsername
+        }
+      });
+      return response.status === 204; // NoContent means success
+    } catch (error) {
+      console.error('Failed to update highest bid:', error.response?.data || error.message);
+      return false;
+    }
+  },
 
   async getAuction(id) {
     return auctionApi.get(`/Auctions/${id}`);
