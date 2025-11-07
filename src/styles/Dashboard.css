@@ -269,3 +269,82 @@
     font-size: 0.75rem;
   }
 }
+/*
+Add to: Dashboard.css
+*/
+
+/* === Review Star Styles === */
+
+/* --- 1. For the Review FORM (clickable stars in ReviewForm.jsx) --- */
+.star-rating {
+  display: flex;
+  gap: 0.25rem;
+  font-size: 1.75rem; /* Makes stars bigger */
+  margin-bottom: 1rem;
+}
+
+.star {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  /* This is the inactive/empty star color */
+  color: #555555; 
+  transition: color 0.2s ease;
+}
+
+.star:hover {
+  color: #aaaaaa; /* Hover color */
+}
+
+.star.active {
+  /* This is the active/selected star color */
+  color: #FFFFFF; /* White */
+}
+
+/* --- 2. For the Review LIST (display-only stars in ReviewList.jsx) --- */
+.review-rating {
+  font-size: 1.1rem;
+}
+
+.review-rating .stars-filled {
+  /* This is the filled star color */
+  color: #FFFFFF; /* White */
+}
+
+.review-rating .stars-empty {
+  /* This is the empty star color */
+  color: #555555; 
+}
+
+/* --- 3. Optional: Basic styling for the review components --- */
+.review-list {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+}
+.review-item {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+.review-item:last-child {
+  border-bottom: none;
+}
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.reviewer-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.review-date {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+.review-comment {
+  color: var(--text-secondary);
+  line-height: 1.5;
+}

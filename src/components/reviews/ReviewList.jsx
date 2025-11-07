@@ -1,17 +1,16 @@
+/*
+From: ReviewList.jsx
+(This file is now updated)
+*/
 import React, { useEffect, useState } from 'react'
-// ✅ FIX: Import the new context
 import { useAuctionContext } from '../../hooks/auction/useAuctionContext'
-//import '../../styles/ReviewList.css'
+// We will add the styles to Dashboard.css instead, which is already loaded.
 
 const ReviewList = ({ username }) => {
-  // ✅ FIX: Use the new context
   const { getReviewsByUser, loading } = useAuctionContext()
-  
-  // ✅ FIX: Add state for async data
   const [reviews, setReviews] = useState([])
   const [error, setError] = useState(null)
 
-  // ✅ FIX: Fetch data in useEffect
   useEffect(() => {
     if (!username) return;
     
@@ -37,8 +36,6 @@ const ReviewList = ({ username }) => {
 
   const getRatingDistribution = () => {
     const distribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
-    if (reviews.length === 0) return distribution;
-    
     reviews.forEach(review => {
       if (distribution[review.rating] !== undefined) {
         distribution[review.rating]++
@@ -47,32 +44,38 @@ const ReviewList = ({ username }) => {
     return distribution
   }
 
-  const ratingDistribution = getRatingDistribution()
-  const averageRating = calculateAverageRating()
+  if (loading && reviews.length === 0) {
+    return <div className="loading">Loading reviews...</div>
+  }
 
-  if (loading) return <div>Loading reviews...</div>
-  if (error) return <div className="error-message">{error}</div>
+  if (error) {
+    return <div className="error-message">{error}</div>
+  }
+  
+  const averageRating = calculateAverageRating()
+  const ratingDistribution = getRatingDistribution()
 
   return (
     <div className="review-list">
+      <h2>Reviews for {username}</h2>
+      
       <div className="review-summary">
-        <div className="average-rating">
-          <div className="rating-number">{averageRating}</div>
-          <div className="rating-stars">
-            {'★'.repeat(Math.round(averageRating))}
-            {'☆'.repeat(5 - Math.round(averageRating))}
+        <div className="summary-average">
+          <div className="average-rating-value">{averageRating}</div>
+          <div className="average-rating-stars">
+            {/* ... (This logic can also be updated, but let's start with the list) ... */}
           </div>
-          <div className="rating-count\">({reviews.length} reviews)</div>
+          <div className="total-reviews">{reviews.length} reviews</div>
         </div>
 
-        <div className="rating-distribution">
-          {[5, 4, 3, 2, 1].map((rating) => (
+        <div className="summary-distribution">
+          {[5, 4, 3, 2, 1].map(rating => (
             <div key={rating} className="distribution-row">
               <span className="distribution-label">{rating} star</span>
-              <div className="distribution-bar">
-                <div
-                  className="distribution-fill"
-                  style={{
+              <div className="distribution-bar-container">
+                <div 
+                  className="distribution-bar"
+                  style={{ 
                     width: reviews.length > 0 ? `${(ratingDistribution[rating] / reviews.length) * 100}%` : '0%'
                   }}
                 ></div>
@@ -93,16 +96,19 @@ const ReviewList = ({ username }) => {
               <div key={review.id} className="review-item">
                 <div className="review-header">
                   <div className="reviewer-info">
-                    {/* Your Review model has 'ReviewerUsername' */}
                     <div className="reviewer-name">{review.reviewerUsername}</div>
                     <div className="review-date">
                       {new Date(review.timestamp).toLocaleDateString()}
                     </div>
                   </div>
+                  
+                  {/* === THIS IS THE UPDATED CODE === */}
                   <div className="review-rating">
-                    {'★'.repeat(review.rating)}
-                    {'☆'.repeat(5 - review.rating)}
+                    <span className="stars-filled">{'★'.repeat(review.rating)}</span>
+                    <span className="stars-empty">{'☆'.repeat(5 - review.rating)}</span>
                   </div>
+                  {/* === END OF UPDATE === */}
+
                 </div>
                 <div className="review-comment">{review.comment}</div>
               </div>

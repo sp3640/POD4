@@ -34,7 +34,7 @@ const SellerDashboard = () => {
 
   // Consolidated ended auctions for the 'my-auctions' tab if you prefer one list:
   // const endedAndSoldAuctions = myAuctions.filter(auction =>
-  //   ['Ended', 'Sold'].includes(auction.status)
+  //   ['Ended', 'Sold'].includes(auction.status)
   // );
 
   const handleAuctionCreated = () => {
