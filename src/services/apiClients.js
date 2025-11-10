@@ -34,8 +34,8 @@ const createApiClient = (baseURL) => {
     }
   );
 
-  // Add a response interceptor to return data directly
-  // and handle errors globally
+  // response interceptor to return data directly
+  // handle errors globally
   instance.interceptors.response.use(
     (response) => response.data, // Return response.data directly
     (error) => {

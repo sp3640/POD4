@@ -96,16 +96,16 @@ const AuctionDetails = () => {
         <div className="auction-info">
           <div className="auction-meta">
             <div className="seller-info">
-              <strong>Seller:</strong> {auction.seller?.username || 'Unknown'}
+              <strong>Seller:</strong> {auction.sellerUsername || 'Unknown'}
             </div>
-            <div className="category">
+            {/* <div className="category">
               <strong>Category:</strong> {auction.category}
-            </div>
-            <div className="condition">
+            </div> */}
+            {/* <div className="condition">
               <strong>Condition:</strong> {auction.condition}
-            </div>
+            </div> */}
             <div className="created-date">
-              <strong>Listed:</strong> {new Date(auction.createdAt).toLocaleDateString()}
+              <strong>Listed:</strong> {new Date(auction.startTime).toLocaleDateString()}
             </div>
             {auction.endTime && (
               <div className="end-date">
@@ -115,21 +115,19 @@ const AuctionDetails = () => {
           </div>
 
           <div className="bid-info">
-            <div className="current-bid">
+            {/* <div className="current-bid">
               <span className="label">Current Bid:</span>
               <span className="amount">${auction.highestBid.toFixed(2)}</span>
-            </div>
-            <div className="bids-count">
-              {auction.bidsCount} bid{auction.bidsCount !== 1 ? 's' : ''}
-            </div>
+            </div> */}
+
             {auction.highestBidder && (
               <div className="highest-bidder">
-                Highest bidder: {auction.highestBidder.username}
+                Highest bidder: {auction.highestBidder}
               </div>
             )}
             {auction.startingPrice && (
               <div className="starting-price">
-                Starting price: ${auction.startingPrice.toFixed(2)}
+                Starting price: ${auction.startPrice}
               </div>
             )}
           </div>
@@ -143,7 +141,7 @@ const AuctionDetails = () => {
           {canUserBid ? (
             <BidForm
               auction={auction}
-              currentBid={auction.highestBid}
+              currentBid={auction.startPrice}
               onSubmit={handleBid}
               loading={loading}
             />
