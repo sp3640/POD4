@@ -1,10 +1,7 @@
-/*
-From: ReviewList.jsx
-(This file is now updated)
-*/
+
 import React, { useEffect, useState } from 'react'
 import { useAuctionContext } from '../../hooks/auction/useAuctionContext'
-// We will add the styles to Dashboard.css instead, which is already loaded.
+
 
 const ReviewList = ({ username }) => {
   const { getReviewsByUser, loading } = useAuctionContext()
@@ -63,7 +60,7 @@ const ReviewList = ({ username }) => {
         <div className="summary-average">
           <div className="average-rating-value">{averageRating}</div>
           <div className="average-rating-stars">
-            {/* ... (This logic can also be updated, but let's start with the list) ... */}
+            
           </div>
           <div className="total-reviews">{reviews.length} reviews</div>
         </div>
@@ -102,12 +99,12 @@ const ReviewList = ({ username }) => {
                     </div>
                   </div>
                   
-                  {/* === THIS IS THE UPDATED CODE === */}
+                  
                   <div className="review-rating">
                     <span className="stars-filled">{'★'.repeat(review.rating)}</span>
                     <span className="stars-empty">{'☆'.repeat(5 - review.rating)}</span>
                   </div>
-                  {/* === END OF UPDATE === */}
+                  
 
                 </div>
                 <div className="review-comment">{review.comment}</div>

@@ -18,16 +18,16 @@ const AuctionDetails = () => {
   const [error, setError] = useState('')
   const [showReceiptModal, setShowReceiptModal] = useState(false)
 
-  useEffect(() => {
-    const fetchAuction = async () => {
-      try {
-        const auctionData = await getAuctionById(id)
-        setAuction(auctionData)
-      } catch (err) {
-        setError('Failed to load auction details')
-        console.error('Error fetching auction:', err)
-      }
+  const fetchAuction = async () => {
+    try {
+      const auctionData = await getAuctionById(id)
+      setAuction(auctionData)
+    } catch (err) {
+      setError('Failed to load auction details')
+      console.error('Error fetching auction:', err)
     }
+  }
+  useEffect(() => {
 
     if (id) {
       fetchAuction()
@@ -47,8 +47,9 @@ const AuctionDetails = () => {
       const updatedAuction = await placeBid(auction.id, amount)
       setAuction(updatedAuction)
       setMessage('Bid placed successfully!')
+      fetchAuction()
       
-      // Clear success message after 3 seconds
+      
       setTimeout(() => setMessage(''), 3000)
     } catch (err) {
       setError(err.message || 'Failed to place bid')
@@ -98,12 +99,7 @@ const AuctionDetails = () => {
             <div className="seller-info">
               <strong>Seller:</strong> {auction.sellerUsername || 'Unknown'}
             </div>
-            {/* <div className="category">
-              <strong>Category:</strong> {auction.category}
-            </div> */}
-            {/* <div className="condition">
-              <strong>Condition:</strong> {auction.condition}
-            </div> */}
+            
             <div className="created-date">
               <strong>Listed:</strong> {new Date(auction.startTime).toLocaleDateString()}
             </div>
@@ -115,17 +111,14 @@ const AuctionDetails = () => {
           </div>
 
           <div className="bid-info">
-            {/* <div className="current-bid">
-              <span className="label">Current Bid:</span>
-              <span className="amount">${auction.highestBid.toFixed(2)}</span>
-            </div> */}
+           
 
-            {auction.highestBidder && (
+            {/* {auction.highestBidder && (
               <div className="highest-bidder">
                 Highest bidder: {auction.highestBidder}
               </div>
-            )}
-            {auction.startingPrice && (
+            )} */}
+            {auction.startPrice && (
               <div className="starting-price">
                 Starting price: ${auction.startPrice}
               </div>
@@ -202,16 +195,16 @@ const AuctionDetails = () => {
             <strong>Status:</strong> {auction.status}
           </div>
           <div className="info-item">
-            <strong>Created:</strong> {new Date(auction.createdAt).toLocaleString()}
+            <strong>Created:</strong> {new Date(auction.startTime).toLocaleString()}
           </div>
           {auction.updatedAt && (
             <div className="info-item">
-              <strong>Last Updated:</strong> {new Date(auction.updatedAt).toLocaleString()}
+              <strong>Last Updated:</strong> {new Date(auction.startTime).toLocaleString()}
             </div>
           )}
         </div>
       </div>
-            {/* 4. ADD THE MODAL RENDER LOGIC AT THE END */}
+            
     
        <div className="payment-button-section">
         <button className="open-receipt-button" onClick={() => setShowReceiptModal(true)}>
@@ -219,7 +212,7 @@ const AuctionDetails = () => {
         </button>
       </div>
 
-      {/* ✅ Modal render logic */}
+      
       {showReceiptModal && (
         <PaymentReceiptModal
           auction={auction}

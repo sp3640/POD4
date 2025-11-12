@@ -23,10 +23,44 @@ const AuctionList = () => {
     setSearchTerm(e.target.value)
   }
 
-  const filteredAuctions = auctions.filter(auction =>
+  // const filteredAuctions = auctions.filter(auction =>
+  //   auction.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //   auction.description.toLowerCase().includes(searchTerm.toLowerCase())
+  // )
+
+  const filteredAuctions = auctions
+  .filter(auction => {
+    // Status filter
+    if (filters.status && auction.status !== filters.status) return false
+
+    // Price range filter
+    if (filters.minPrice && auction.startPrice < parseFloat(filters.minPrice)) return false
+    if (filters.maxPrice && auction.startPrice > parseFloat(filters.maxPrice)) return false
+
+    // Category filter (only works if your auction data has a category field)
+    if (filters.category && auction.category !== filters.category) return false
+
+    return true
+  })
+  .filter(auction =>
     auction.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     auction.description.toLowerCase().includes(searchTerm.toLowerCase())
   )
+  .sort((a, b) => {
+    switch (filters.sortBy) {
+      case 'newest':
+        return new Date(b.startTime) - new Date(a.startTime)
+      case 'price_low_high':
+        return a.startPrice - b.startPrice
+      case 'price_high_low':
+        return b.startPrice - a.startPrice
+      case 'most_bids':
+        return (b.highestBid || 0) - (a.highestBid || 0)
+      case 'ending_soon':
+      default:
+        return new Date(a.endTime) - new Date(b.endTime)
+    }
+  })
 
   if (loading && auctions.length === 0) {
     return <div className="loading">Loading auctions...</div>

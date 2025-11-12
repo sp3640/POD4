@@ -1,25 +1,18 @@
 import { useState } from 'react'
-// ✅ FIX: Import the new context
+
 import { useAuctionContext } from '../../hooks/auction/useAuctionContext'
 import { useAuth } from '../../hooks/auth/useAuth'
-// ✅ ADD THIS IMPORT:
+
 import { auctionService } from '../../services/auctionService'
 import '../../styles/AuctionCreateForm.css'
 import ImageUpload from '../shared/ImageUpload'
  
 const AuctionCreateForm = ({ onSuccess }) => {
   const { user } = useAuth()
-  // ✅ FIX: Use the new context and get the API-driven functions
+  
   const { createAuction, loading } = useAuctionContext()
  
-  // const [formData, setFormData] = useState({
-  //   productName: '',
-  //   description: '',
-  //   startingPrice: '10', // Default value
-  //   category: 'ELECTRONICS', // Default value
-  //   duration: '24', // Default value
-  //   condition: 'NEW' // Default value
-  // })
+  
   const [formData, setFormData] = useState({
   productName: '',
   description: '',
@@ -27,11 +20,11 @@ const AuctionCreateForm = ({ onSuccess }) => {
   category: 'ELECTRONICS',
   duration: '24',
   condition: 'NEW',
-  startTime: new Date().toISOString(), // default to now
-  endTime: '' // will be calculated
+  startTime: new Date().toISOString(), 
+  endTime: '' 
 })
  
-  // 'images' state will hold the File objects from ImageUpload
+  
   const [images, setImages] = useState([])
   const [errors, setErrors] = useState({})
  
@@ -58,17 +51,17 @@ const AuctionCreateForm = ({ onSuccess }) => {
     }))
   }
  
-  // ✅ REPLACED with your new handleSubmit function
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({}); // Clear old errors
+    setErrors({}); 
  
-    // 1. Validate form fields (your existing function)
+    
     if (!validateForm()) {
       return;
     }
  
-    // 2. Check if an image was selected
+    
     if (images.length === 0) {
       setErrors({ images: 'An image is required.' });
       return;
@@ -77,42 +70,42 @@ const AuctionCreateForm = ({ onSuccess }) => {
     let uploadedImageUrl = '';
  
     try {
-      // 3. Upload the first image
-      // This calls auctionService.uploadImage
+      
+      
       console.log('Uploading image:', images);
       const uploadResponse = await auctionService.uploadImage(images[0]);
  
       if (!uploadResponse.url) {
         throw new Error('Image upload failed to return a URL.');
       }
-      // The URL from your UploadController.cs (e.g., http://localhost:5201/uploads/image.jpg)
+      
       uploadedImageUrl = uploadResponse.url;
  
     } catch (err) {
       console.error('Image upload error:', err);
       setErrors({ submit: `Image Upload Error: ${err.message || 'Check console'}` });
-      return; // Stop if upload fails
+      return; 
     }
  
     try {
-      // 4. Prepare the DTO for the AuctionService
+      
       const auctionData = {
         productName: formData.productName,
         description: formData.description,
         startingPrice: parseFloat(formData.startingPrice),
-        // Your form uses 'duration' in hours, the service converts it
+        
         duration: parseInt(formData.duration),
-        // Pass the URL from step 3
+        
         imageUrl: uploadedImageUrl
       };
  
-      // 5. Call 'createAuction' from your context/service
-      // This calls auctionService.createAuction via your context
+      
+      
       const newAuction = await createAuction(auctionData);
  
-      // 6. Success
+      
       if (onSuccess) {
-        onSuccess(newAuction); // Call the prop to close the modal or redirect
+        onSuccess(newAuction); 
       }
  
     } catch (err) {
@@ -124,7 +117,7 @@ const AuctionCreateForm = ({ onSuccess }) => {
   return (
     <form onSubmit={handleSubmit} className="auction-create-form">
       <h2>List a New Item</h2>
-      {/* (All your form-group divs remain the same) */}
+      {/* (All  form-group divs ) */}
  
       <div className="form-group">
         <label htmlFor="productName">Title *</label>

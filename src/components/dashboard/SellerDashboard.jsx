@@ -5,7 +5,7 @@ import { useAuth } from '../../hooks/auth/useAuth';
 import '../../styles/Dashboard.css';
 import AuctionCard from '../auction/AuctionCard';
 import AuctionCreateForm from '../auction/AuctionCreateForm';
-// 1. IMPORT THE MODAL
+
 import PaymentReceiptModal from '../payment/PaymentReceiptModal';
 import ReviewList from '../reviews/ReviewList';
 
@@ -15,7 +15,7 @@ const SellerDashboard = () => {
   const [activeTab, setActiveTab] = useState('my-auctions');
   const [showCreateForm, setShowCreateForm] = useState(false);
 
-  // 2. ADD STATE TO MANAGE WHICH RECEIPT TO SHOW
+  
   const [selectedAuction, setSelectedAuction] = useState(false);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const SellerDashboard = () => {
 
   const myAuctions = auctions.filter(auction => auction.sellerUsername === user.username);
 
-  // Assuming statuses: 'Live', 'Upcoming', 'Ended', 'Sold'
+  
   const activeAuctions = myAuctions.filter(auction => auction.status === 'Live');
   const upcomingAuctions = myAuctions.filter(auction => auction.status === 'Upcoming');
   const soldAuctions = myAuctions.filter(auction => auction.status === 'Sold'); // Used for the new 'sold' tab
@@ -32,10 +32,7 @@ const SellerDashboard = () => {
     ['Ended'].includes(auction.status) // Ended but not sold
   );
 
-  // Consolidated ended auctions for the 'my-auctions' tab if you prefer one list:
-  // const endedAndSoldAuctions = myAuctions.filter(auction =>
-  //   ['Ended', 'Sold'].includes(auction.status)
-  // );
+  
 
   const handleAuctionCreated = () => {
     setShowCreateForm(false);
@@ -198,7 +195,7 @@ const SellerDashboard = () => {
         </div>
       )}
 
-      {/* 4. ADD THE MODAL RENDER LOGIC AT THE END */}
+      
       {selectedAuction && (
         <PaymentReceiptModal
           auction={selectedAuction}

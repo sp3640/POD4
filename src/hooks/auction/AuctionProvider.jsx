@@ -1,5 +1,4 @@
-// src/hooks/auction/AuctionProvider.jsx
-// *** RENAME this file to AuctionProvider.jsx ***
+
 
 import { useCallback, useState, useEffect } from 'react';
 import { AuctionContext } from './AuctionContext';
@@ -14,7 +13,7 @@ export const AuctionProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Load all auctions on mount
+  
   useEffect(() => {
     loadAuctions();
   }, []);
@@ -31,15 +30,15 @@ export const AuctionProvider = ({ children }) => {
       setLoading(false);
     }
   }, []);
-  // ADD THIS NEW useCallback FUNCTION
+  
   const getTransactionForAuction = useCallback(async (auctionId) => {
     try {
-      setLoading(true); // Reuse global loading state
+      setLoading(true); 
       setError(null);
       return await paymentService.getTransactionForAuction(auctionId);
     } catch (err) {
       setError(err.message);
-      throw err; // Re-throw so the component can catch it
+      throw err; 
     } finally {
       setLoading(false);
     }
@@ -50,7 +49,7 @@ export const AuctionProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       
-      // Fetch auction, bids, and reviews in parallel
+      
       const [auctionData, bids, reviews] = await Promise.all([
         auctionService.getAuction(id),
         bidService.getBidsForAuction(id),
@@ -59,7 +58,7 @@ export const AuctionProvider = ({ children }) => {
       
       const fullAuction = { ...auctionData, bids, reviews };
 
-      // Update the single auction in our list
+      
       setAuctions(prev => {
         const index = prev.findIndex(a => a.id === id);
         if (index !== -1) {
@@ -67,7 +66,7 @@ export const AuctionProvider = ({ children }) => {
           newList[index] = fullAuction;
           return newList;
         }
-        // If not in list, just add it (though it should be)
+        
         return [...prev, fullAuction]; 
       });
       
@@ -85,12 +84,7 @@ export const AuctionProvider = ({ children }) => {
       setLoading(true);
       setError(null);
 
-      // Step 1: Upload images
-      // const uploadPromises = auctionData.imageUrls.map(file => auctionService.uploadImage(file));
-      // const uploadResponses = await Promise.all(uploadPromises);
-      // const imageUrls = uploadResponses.map(res => res.url);
-
-      // Step 2: Create auction with image URLs
+      
       const newAuction = await auctionService.createAuction(auctionData);
       
       setAuctions(prev => [newAuction, ...prev]);
@@ -107,10 +101,10 @@ export const AuctionProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      // 'placeBid' in BiddingService calls the AuctionService for us
+      
       const newBid = await bidService.placeBid(auctionId, amount);
       
-      // We must re-fetch the auction to get the updated highestBid
+      
       const updatedAuction = await auctionService.getAuction(auctionId);
 
       setAuctions(prev => 

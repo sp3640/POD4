@@ -1,7 +1,7 @@
-// src/components/payment/PaymentReceiptModal.jsx
+
 import React, { useEffect, useState } from 'react';
 import { useAuctionContext } from '../../hooks/auction/useAuctionContext';
-import '../../styles/PaymentReceiptModal.css'; // We will create this CSS file
+import '../../styles/PaymentReceiptModal.css'; 
 
 const PaymentReceiptModal = ({ auction, onClose }) => {
   const { getTransactionForAuction, loading } = useAuctionContext();

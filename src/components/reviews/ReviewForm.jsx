@@ -1,32 +1,29 @@
 import React, { useState } from 'react'
-// ✅ FIX: Import the new context
 import { useAuctionContext } from '../../hooks/auction/useAuctionContext'
 
-
 const ReviewForm = ({ auction, onSuccess, onCancel }) => {
-  // ✅ FIX: Use the new context
   const { submitReview, loading } = useAuctionContext()
   const [rating, setRating] = useState(5)
   const [comment, setComment] = useState('')
   const [errors, setErrors] = useState({})
+  const [success, setSuccess] = useState(null)
 
   const validateForm = () => {
     const newErrors = {}
-    
     if (rating < 1 || rating > 5) {
       newErrors.rating = 'Rating must be between 1 and 5'
     }
     if (!comment.trim()) {
       newErrors.comment = 'Comment is required'
     }
-
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+    setSuccess(null) 
+
     if (!validateForm()) return
 
     try {
@@ -34,15 +31,20 @@ const ReviewForm = ({ auction, onSuccess, onCancel }) => {
         auctionId: auction.id,
         rating,
         comment: comment.trim(),
-        // ✅ FIX: Your DTO expects 'ReviewedUsername'
-        reviewedUsername: auction.sellerUsername, 
-        reviewType: 'Seller' // You are reviewing the seller
+        reviewedUsername: auction.sellerUsername,
+        reviewType: 'Seller',
       }
 
       await submitReview(reviewData)
+
+      setErrors({})
+      setSuccess('✅ Your review has been submitted successfully!')
+      setComment('')
+      setRating(5)
+
       onSuccess?.()
     } catch (error) {
-      setErrors({ submit: error.message })
+      setErrors({ submit: error.message || 'Something went wrong. Please try again.' })
     }
   }
 
@@ -62,6 +64,7 @@ const ReviewForm = ({ auction, onSuccess, onCancel }) => {
                 className={`star ${star <= rating ? 'active' : ''}`}
                 onClick={() => setRating(star)}
                 aria-label={`Rate ${star} stars`}
+                disabled={loading}
               >
                 ★
               </button>
@@ -79,11 +82,13 @@ const ReviewForm = ({ auction, onSuccess, onCancel }) => {
             placeholder="Share your experience with this seller..."
             rows="4"
             className={errors.comment ? 'error' : ''}
+            disabled={loading}
           />
           {errors.comment && <span className="error-text">{errors.comment}</span>}
         </div>
 
         {errors.submit && <div className="error-message">{errors.submit}</div>}
+        {success && <div className="success-message">{success}</div>}
 
         <div className="review-actions">
           <button

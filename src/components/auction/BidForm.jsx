@@ -8,7 +8,7 @@ const BidForm = ({ auction, currentBid, onSubmit, loading }) => {
   const [error, setError] = useState('')
 
   const calculateMinimumBid = () => {
-    const minBid = currentBid + (currentBid * 0.01) // 1% higher than current bid
+    const minBid = currentBid + (currentBid * 0.01) 
     return Math.ceil(minBid)
   }
 

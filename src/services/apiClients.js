@@ -1,7 +1,7 @@
-// src/services/apiClients.js
+
 import axios from 'axios';
 
-// Base URLs from your Swagger screenshots
+
 const AUTH_SERVICE_URL = 'http://localhost:5222/api';
 const AUCTION_SERVICE_URL = 'http://localhost:5115/api';
 const BID_SERVICE_URL = 'http://localhost:5133/api';
@@ -34,8 +34,7 @@ const createApiClient = (baseURL) => {
     }
   );
 
-  // response interceptor to return data directly
-  // handle errors globally
+  
   instance.interceptors.response.use(
     (response) => response.data, // Return response.data directly
     (error) => {

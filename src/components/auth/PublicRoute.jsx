@@ -6,7 +6,7 @@ const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
 
   if (isAuthenticated) {
-    // Redirect logged-in users away from login/register
+    
     return <Navigate to="/" replace />
   }
 

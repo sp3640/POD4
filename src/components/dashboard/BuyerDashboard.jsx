@@ -3,7 +3,7 @@ import { useAuctionContext } from '../../hooks/auction/useAuctionContext';
 import { useAuth } from '../../hooks/auth/useAuth';
 import '../../styles/Dashboard.css';
 import AuctionCard from '../auction/AuctionCard';
-import PaymentReceiptModal from '../payment/PaymentReceiptModal'; // 1. IMPORT THE MODAL
+import PaymentReceiptModal from '../payment/PaymentReceiptModal'; 
 import ReviewList from '../reviews/ReviewList';
 
 const BuyerDashboard = () => {
@@ -11,7 +11,7 @@ const BuyerDashboard = () => {
   const { auctions, watchedAuctions, toggleWatchAuction } = useAuctionContext();
   const [activeTab, setActiveTab] = useState('won');
 
-  // 2. ADD STATE TO MANAGE WHICH RECEIPT TO SHOW
+  
   const [selectedAuction, setSelectedAuction] = useState(null);
 
   const wonAuctions = auctions.filter(auction =>
@@ -93,7 +93,7 @@ const BuyerDashboard = () => {
         </div>
       )}
 
-      {/* 4. ADD THE MODAL RENDER LOGIC AT THE END */}
+      
       {selectedAuction && (
         <PaymentReceiptModal
           auction={selectedAuction}

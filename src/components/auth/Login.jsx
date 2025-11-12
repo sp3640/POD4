@@ -69,22 +69,7 @@ const Login = () => {
             />
           </div>
 
-          {/* Role Dropdown 
-          <div className="form-group">
-            <label htmlFor="role">Role</label>
-            <select
-              id="role"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              required
-            >
-              <option value="">-- Select Role --</option>
-              <option value="ADMIN">Admin</option>
-              <option value="SELLER">Seller</option>
-              <option value="BUYER">Buyer</option>
-            </select>
-          </div>*/}
+          
 
           {error && <div className="error-message">{error}</div>}
 

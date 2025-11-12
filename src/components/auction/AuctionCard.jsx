@@ -10,7 +10,7 @@ const AuctionCard = ({ auction, onWatchToggle, isWatched = false }) => {
     productName,
     imageUrl,
     highestBid,
-    startingPrice,
+    startPrice,
     bidsCount,
     status,
     endTime,
@@ -21,7 +21,7 @@ const AuctionCard = ({ auction, onWatchToggle, isWatched = false }) => {
   const isEnded = status === 'ENDED'
   const hasBids = bidsCount > 0
 
-  // ✅ Check if auction has expired by comparing endTime with now
+  
   const isExpired = endTime ? new Date(endTime) < new Date() : false
 
   return (
@@ -33,9 +33,9 @@ const AuctionCard = ({ auction, onWatchToggle, isWatched = false }) => {
           loading="lazy"
         />
         <div className="auction-card-status">
-          <span className={`status-badge ${status.toLowerCase()}`}>
+          {/* <span className={`status-badge ${status.toLowerCase()}`}>
             {status}
-          </span>
+          </span> */}
         </div>
         <button 
           className={`watch-btn ${isWatched ? 'watched' : ''}`}
@@ -57,7 +57,7 @@ const AuctionCard = ({ auction, onWatchToggle, isWatched = false }) => {
 
         <div className="auction-price">
           <div className="highestBid">
-            {hasBids ? formatCurrency(highestBid) : formatCurrency(startingPrice)}
+            {hasBids ? formatCurrency(highestBid) : formatCurrency(startPrice)}
           </div>
           <div className="bid-label">
             {hasBids ? 'highestBid' : 'Starting Price'}

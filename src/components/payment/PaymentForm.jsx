@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
-// ✅ FIX: Import the new context
+
 import { useAuctionContext } from '../../hooks/auction/useAuctionContext'
-// ✅ FIX: Import useAuth from the correct path
+
 import { useAuth } from '../../hooks/auth/useAuth'
 import '../../styles/PaymentForm.css'
 
 const PaymentForm = ({ auction, onSuccess, onCancel }) => {
-  useAuth() // This line is fine
-  // ✅ FIX: Use the new context
+  useAuth() 
+  
   const { processPayment, loading } = useAuctionContext() 
   const [paymentMethod, setPaymentMethod] = useState('credit_card')
   const [cardDetails, setCardDetails] = useState({
@@ -40,7 +40,7 @@ const PaymentForm = ({ auction, onSuccess, onCancel }) => {
     try {
       const paymentData = {
         auctionId: auction.id,
-        // This is a simplified DTO, your backend PaymentDto is more specific
+        
         cardNumber: cardDetails.number,
         expirationDate: cardDetails.expiry,
         cvv: cardDetails.cvv,
@@ -54,7 +54,7 @@ const PaymentForm = ({ auction, onSuccess, onCancel }) => {
     }
   }
 
-  // ... (rest of your return JSX is fine)
+  
   return (
     <div className="payment-form">
       <h3>Pay for Auction</h3>
@@ -67,7 +67,7 @@ const PaymentForm = ({ auction, onSuccess, onCancel }) => {
           <strong>${(auction.currentBid * 1.08).toFixed(2)}</strong> 
         </div>
 
-        {/* (All your form-group divs for paymentMethod, cardDetails, etc. remain the same) */}
+        
 
         <div className="form-group">
           <label>Payment Method</label>
@@ -149,7 +149,7 @@ const PaymentForm = ({ auction, onSuccess, onCancel }) => {
           </div>
         )}
         
-        {/* ... other payment methods ... */}
+        
 
         {errors.submit && <div className="error-message">{errors.submit}</div>}
 

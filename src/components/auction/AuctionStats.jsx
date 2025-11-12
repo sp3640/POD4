@@ -3,14 +3,26 @@ import '../../styles/AuctionStats.css'
 
 const AuctionStats = () => {
   const { auctions } = useAuctionContext()
+  const now = new Date()
+
+  // Helper to compute status based on time
+  const getAuctionStatus = (auction) => {
+    const start = new Date(auction.startTime)
+    const end = new Date(auction.endTime)
+
+    if (now < start) return 'UPCOMING'
+    if (now >= start && now <= end) return 'LIVE'
+    if (now > end) return auction.highestBid > 0 ? 'SOLD' : 'ENDED'
+    return 'UNKNOWN'
+  }
 
   const stats = {
     total: auctions.length,
-    live: auctions.filter(a => a.status === 'Live').length,
-    upcoming: auctions.filter(a => a.status === 'UPCOMING').length,
-    ended: auctions.filter(a => a.status === 'ENDED').length,
-    sold: auctions.filter(a => a.status === 'SOLD').length,
-    totalValue: auctions.reduce((sum, auction) => sum + auction.currentBid, 0)
+    live: auctions.filter(a => getAuctionStatus(a) === 'LIVE').length,
+    upcoming: auctions.filter(a => getAuctionStatus(a) === 'UPCOMING').length,
+    ended: auctions.filter(a => getAuctionStatus(a) === 'ENDED').length,
+    sold: auctions.filter(a => getAuctionStatus(a) === 'SOLD').length,
+    totalValue: auctions.reduce((sum, auction) => sum + (auction.startPrice || 0), 0)
   }
 
   const StatCard = ({ label, value, subtext }) => (

@@ -56,7 +56,7 @@ const Profile = () => {
 
   return (
     <div className="profile-page">
-      <div className="profile-header">
+      {/* <div className="profile-header">
         <h1>Your Profile</h1>
         {!isEditing && (
           <button
@@ -66,7 +66,7 @@ const Profile = () => {
             Edit Profile
           </button>
         )}
-      </div>
+      </div> */}
 
       {isEditing ? (
         <form onSubmit={handleSubmit} className="profile-form">
@@ -212,13 +212,13 @@ const Profile = () => {
               <label>Email:</label>
               <span>{user.email}</span>
             </div>
-            <div className="info-item">
+            {/* <div className="info-item">
               <label>Phone:</label>
               <span>{user.phone || 'Not provided'}</span>
-            </div>
+            </div> */}
             <div className="info-item">
               <label>Role:</label>
-              <span className={`role-badge ${user.role.toLowerCase()}`}>
+              <span className={`role-badge ${user.role?.toLowerCase()}`}>
                 {user.role}
               </span>
             </div>

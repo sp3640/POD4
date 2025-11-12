@@ -1,15 +1,15 @@
-// src/hooks/auth/AuthProvider.jsx
+
 import { useCallback, useEffect, useState } from 'react';
 import { authService } from '../../services/authService';
 import { AuthContext } from './AuthContext';
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [allUsers, setAllUsers] = useState([]); // For Admin
+  const [allUsers, setAllUsers] = useState([]); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // On initial load, check localStorage for an existing user
+  
   useEffect(() => {
     setLoading(true);
     try {
@@ -44,7 +44,7 @@ const AuthProvider = ({ children }) => {
     setError(null);
     try {
       const newUser = await authService.register(userData);
-      setUser(newUser); // Login after register
+      setUser(newUser); 
     } catch (err) {
       setError(err.message);
       throw err;

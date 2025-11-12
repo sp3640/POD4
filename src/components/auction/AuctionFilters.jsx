@@ -36,7 +36,7 @@ const AuctionFilters = ({ filters, onFilterChange }) => {
         </button>
       </div>
 
-      <div className="filter-group">
+      {/* <div className="filter-group">
         <label htmlFor="category">Category</label>
         <select
           id="category"
@@ -66,7 +66,7 @@ const AuctionFilters = ({ filters, onFilterChange }) => {
           <option value="ENDED">Ended</option>
           <option value="SOLD">Sold</option>
         </select>
-      </div>
+      </div> */}
 
       <div className="filter-group">
         <label>Price Range</label>
